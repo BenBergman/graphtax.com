@@ -7,6 +7,7 @@
     <link href="http://getbootstrap.com/examples/justified-nav/justified-nav.css" rel="stylesheet">
  
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="taxes.js" charset="utf-8"></script>
 
     <style>
         .axis path {
@@ -15,7 +16,7 @@
             shape-rendering: crispEdges;
         }
         .axis text {
-            font-family: Lato;
+            font-family: Helvetica;
             font-size: 13px;
         }
     </style>
@@ -30,13 +31,48 @@
  
 	    <svg id="visualisation" width="1000" height="500"></svg>
 	    <script>
-                function InitChart(data) {
-                    /*
-                    regions = d3.nest()
-                        .key(function(d) { return d.region; })
-                        .entries(stocks = data);
-                        */
+                var brackets = [
+                    [10000, 0.1],
+                    [20000, 0.2],
+                    [30000, 0.3],
+                    [40000, 0.4],
+                    [Infinity, 0.5]
+                ];
 
+                var mb_brackets = [
+                    [31000, 0.2580],
+                    [45282, 0.2775],
+                    [67000, 0.3325],
+                    [90563, 0.3790],
+                    [140388, 0.4340],
+                    [200000, 0.4640],
+                    [Infinity, 0.5040]
+                ];
+
+                var mb_personal_amt = [
+                    [9134, 0.1080]
+                ];
+
+                var fed_personal_amt = [
+                    [11474, 0.1500]
+                ];
+
+                mb_brackets = subtract_brackets(mb_brackets, mb_personal_amt);
+                mb_brackets = subtract_brackets(mb_brackets, fed_personal_amt);
+
+                var data = [];
+
+                for (var i = 0; i <= 250000; i += 100) {
+                    data.push({
+                        "Income": i,
+                        "Tax": taxes_owed(i, mb_brackets),
+                        "Effective Rate": effective_rate(i, mb_brackets),
+                        "Marginal Rate": marginal_rate(i, mb_brackets)
+                    });
+                }
+
+
+                function InitChart(data) {
                     var vis = d3.select("#visualisation"),
                         WIDTH = 1000,
                         HEIGHT = 500,
@@ -46,11 +82,26 @@
                             bottom: 20,
                             left: 50
                         },
-                    xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0, 250000]),
-                    yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0, 100000]),
-                    yScale2 = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([0, 0.5]),
+
+                    xScale = d3.scale.linear()
+                        .range([MARGINS.left, WIDTH - MARGINS.right])
+                        .domain([0, d3.max(data, function(d) {
+                            return d["Income"];
+                        })]),
+                    yScale = d3.scale.linear()
+                        .range([HEIGHT - MARGINS.top, MARGINS.bottom])
+                        .domain([0, d3.max(data, function(d) {
+                            return d["Tax"];
+                        })]),
+                    yScale2 = d3.scale.linear()
+                        .range([HEIGHT - MARGINS.top, MARGINS.bottom])
+                        .domain([0, d3.max(data, function(d) {
+                            return d["Marginal Rate"];
+                        })]),
+
                     xAxis = d3.svg.axis()
-                        .scale(xScale),
+                        .scale(xScale)
+                        .orient("bottom");
                     yAxis = d3.svg.axis()
                         .scale(yScale)
                         .orient("left");
@@ -111,17 +162,8 @@
                         .attr('stroke', color("Marginal Rate"))
                         .attr('stroke-width', 2)
                         .attr('fill', 'none');
-                    /*
-                    regions.forEach(function(d) {
-                        vis.append('svg:path')
-                            .attr('d', lineGen(d.values))
-                            .attr('stroke', color(d.key))
-                            .attr('stroke-width', 2)
-                            .attr('fill', 'none');
-                    });
-                    */
                 }
-                d3.csv("foo.csv", InitChart);
+                InitChart(data);
             </script>
  
         </div>
