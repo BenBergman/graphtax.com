@@ -4,6 +4,7 @@
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
  
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="stylesheets/main.css" rel="stylesheet">
  
     <link href="http://getbootstrap.com/examples/justified-nav/justified-nav.css" rel="stylesheet">
  
@@ -33,6 +34,13 @@
  
         <div class="jumbotron">
             <div class="main" ng-controller="MainController">
+                <div class='example'>
+                    <div class='chart'></div>
+                    <div class='chart-caption'>
+                        Enter data: <input ng-model="chart_data" value="">
+                        <span class='button' ng-click="updateChart()">Update Chart</span>
+                    </div>
+                </div>
                 <h1>{{ title }}</h1>
             </div>
  
