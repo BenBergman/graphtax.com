@@ -1,5 +1,4 @@
 app.controller("MainController", ["$scope", function($scope) {
-    $scope.title = "Foobar";
     $scope.updateChart = function() {
         var index = 0;
         var data = angular.fromJson("[" + $scope.chart_data + "]");
