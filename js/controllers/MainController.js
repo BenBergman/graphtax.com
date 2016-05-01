@@ -14,4 +14,106 @@ app.controller("MainController", ["$scope", function($scope) {
             .style("height", function(d) { return d + "%"; })
             .style("left", function(d) { return (index++) * (bar_width + 2) + "px"; });
     };
+    $scope.changeProvince = function() {
+        console.log('changing province...');
+        var fed_brackets = [
+            [45282, 0.1500],
+            [90563, 0.2050],
+            [140388, 0.2600],
+            [200000, 0.2900],
+            [Infinity, 0.3300]
+        ];
+
+        var mb_brackets = [
+            [31000, 0.1080],
+            [67000, 0.1275],
+            [Infinity, 0.1740]
+        ];
+
+        var on_brackets = [
+            [41536, 0.0505],
+            [83075, 0.0915],
+            [150000, 0.1116],
+            [220000, 0.1216],
+            [Infinity, 0.1316]
+        ];
+
+        var fed_personal_amt = [
+            [11474, 0.1500]
+        ];
+
+        var mb_personal_amt = [
+            [9134, 0.1080]
+        ];
+
+        var on_personal_amt = [
+            [10011, 0.0505]
+        ];
+
+        var brackets = add_brackets(mb_brackets, fed_brackets);
+        brackets = subtract_brackets(brackets, mb_personal_amt);
+        brackets = subtract_brackets(brackets, fed_personal_amt);
+
+        var data = [];
+
+        for (var i = 0; i <= 250000; i += 100) {
+            data.push({
+                "Income": i,
+                "Tax": taxes_owed(i, brackets),
+                "Effective Rate": effective_rate(i, brackets),
+                "Marginal Rate": marginal_rate(i, brackets)
+            });
+        }
+
+
+
+
+        var WIDTH = 1000,
+            HEIGHT = 500,
+                MARGINS = {
+                    top: 20,
+                    right: 50,
+                    bottom: 20,
+                    left: 50
+                },
+
+            xScale = d3.scale.linear()
+                .range([MARGINS.left, WIDTH - MARGINS.right])
+                .domain([0, d3.max(data, function(d) { return d["Income"]; })]),
+            yScale = d3.scale.linear()
+                .range([HEIGHT - MARGINS.top, MARGINS.bottom])
+                .domain([0, d3.max(data, function(d) { return d["Tax"]; })]),
+            yScale2 = d3.scale.linear()
+                .range([HEIGHT - MARGINS.top, MARGINS.bottom])
+                .domain([0, d3.max(data, function(d) { return d["Marginal Rate"]; })]);
+
+
+
+        var lineGenTax = d3.svg.line()
+            .x(function(d) { return xScale(d.Income); })
+            .y(function(d) { return yScale(d["Tax"]); })
+            .interpolate("basis");
+        var lineGenEff = d3.svg.line()
+            .x(function(d) { return xScale(d.Income); })
+            .y(function(d) { return yScale2(d["Effective Rate"]); })
+            .interpolate("basis");
+        var lineGenMarg = d3.svg.line()
+            .x(function(d) { return xScale(d.Income); })
+            .y(function(d) { return yScale2(d["Marginal Rate"]); })
+            .interpolate("basis");
+
+
+        d3.select('#tax')
+            .transition()
+            .duration(2000)
+            .attr('d', lineGenTax(data));
+        d3.select('#effective')
+            .transition()
+            .duration(2000)
+            .attr('d', lineGenEff(data));
+        d3.select('#marginal')
+            .transition()
+            .duration(2000)
+            .attr('d', lineGenMarg(data));
+    };
 }]);

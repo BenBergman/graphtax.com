@@ -156,7 +156,7 @@ app.directive('taxChart', function() {
 
 
             svg.append('svg:path')
-                .attr('class', 'tax')
+                .attr('id', 'tax')
                 .attr('d', lineGenTax(data))
                 .attr('stroke', color("Tax"))
                 .attr('stroke-width', 2)
@@ -166,7 +166,7 @@ app.directive('taxChart', function() {
                 .duration(2000)
                 .attr('d', lineGenTax(data2));
             svg.append('svg:path')
-                .attr('class', 'effective')
+                .attr('id', 'effective')
                 .attr('d', lineGenEff(data))
                 .attr('stroke', color("Effective Rate"))
                 .attr('stroke-width', 2)
@@ -176,7 +176,7 @@ app.directive('taxChart', function() {
                 .duration(2000)
                 .attr('d', lineGenEff(data2));
             svg.append('svg:path')
-                .attr('class', 'marginal')
+                .attr('id', 'marginal')
                 .attr('d', lineGenMarg(data))
                 .attr('stroke', color("Marginal Rate"))
                 .attr('stroke-width', 2)
