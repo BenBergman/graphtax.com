@@ -1,3 +1,14 @@
+.axis path {
+	fill: none;
+	stroke: #777;
+	shape-rendering: crispEdges;
+}
+
+.axis text {
+	font-family: Helvetica;
+	font-size: 13px;
+}
+
 .example {
 	text-align: center;
 }
@@ -11,11 +22,11 @@
 }
 
 .chart div  {
-  margin: 1px;
-  bottom: 0;
-  position: absolute;
-  display: inline-block;
-  background-color: #767676;
+	margin: 1px;
+	bottom: 0;
+	position: absolute;
+	display: inline-block;
+	background-color: #767676;
 }
 
 .chart-caption {

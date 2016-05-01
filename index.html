@@ -11,28 +11,17 @@
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js" charset="utf-8"></script>
     <script src="js/taxes.js" charset="utf-8"></script>
-
-    <style>
-        .axis path {
-            fill: none;
-            stroke: #777;
-            shape-rendering: crispEdges;
-        }
-        .axis text {
-            font-family: Helvetica;
-            font-size: 13px;
-        }
-    </style>
- 
 </head>
  
 <body ng-app="myApp">
     <script src="js/app.js"></script>
     <script src="js/controllers/MainController.js"></script>
+    <script src="js/directives/taxChart.js"></script>
  
     <div class="container">
  
         <div class="jumbotron">
+            <tax-chart></tax-chart>
             <div class="main" ng-controller="MainController">
                 <div class='example'>
                     <div class='chart'></div>
@@ -41,205 +30,9 @@
                         <span class='button' ng-click="updateChart()">Update Chart</span>
                     </div>
                 </div>
-                <h1>{{ title }}</h1>
             </div>
  
-	    <svg id="visualisation" width="1000" height="500"></svg>
-	    <script>
-                var fed_brackets = [
-                    [45282, 0.1500],
-                    [90563, 0.2050],
-                    [140388, 0.2600],
-                    [200000, 0.2900],
-                    [Infinity, 0.3300]
-                ];
-
-                var mb_brackets = [
-                    [31000, 0.1080],
-                    [67000, 0.1275],
-                    [Infinity, 0.1740]
-                ];
-
-                var on_brackets = [
-                    [41536, 0.0505],
-                    [83075, 0.0915],
-                    [150000, 0.1116],
-                    [220000, 0.1216],
-                    [Infinity, 0.1316]
-                ];
-
-                var fed_personal_amt = [
-                    [11474, 0.1500]
-                ];
-
-                var mb_personal_amt = [
-                    [9134, 0.1080]
-                ];
-
-                var on_personal_amt = [
-                    [10011, 0.0505]
-                ];
-
-                var brackets= add_brackets(mb_brackets, fed_brackets);
-                brackets = subtract_brackets(brackets, mb_personal_amt);
-                brackets = subtract_brackets(brackets, fed_personal_amt);
-
-                var data = [];
-
-                for (var i = 0; i <= 250000; i += 100) {
-                    data.push({
-                        "Income": i,
-                        "Tax": taxes_owed(i, brackets),
-                        "Effective Rate": effective_rate(i, brackets),
-                        "Marginal Rate": marginal_rate(i, brackets)
-                    });
-                }
-
-                var WIDTH = 1000,
-                    HEIGHT = 500,
-                    MARGINS = {
-                        top: 20,
-                        right: 50,
-                        bottom: 20,
-                        left: 50
-                    },
-
-                xScale = d3.scale.linear()
-                    .range([MARGINS.left, WIDTH - MARGINS.right])
-                    .domain([0, d3.max(data, function(d) { return d["Income"]; })]),
-                yScale = d3.scale.linear()
-                    .range([HEIGHT - MARGINS.top, MARGINS.bottom])
-                    .domain([0, d3.max(data, function(d) { return d["Tax"]; })]),
-                yScale2 = d3.scale.linear()
-                    .range([HEIGHT - MARGINS.top, MARGINS.bottom])
-                    .domain([0, d3.max(data, function(d) { return d["Marginal Rate"]; })]);
-
-                xAxis = d3.svg.axis()
-                    .scale(xScale)
-                    .orient("bottom");
-                yAxis = d3.svg.axis()
-                    .scale(yScale)
-                    .orient("right");
-                yAxis2 = d3.svg.axis()
-                    .scale(yScale2)
-                    .orient("left");
-
-                var lineGenTax = d3.svg.line()
-                    .x(function(d) {
-                        return xScale(d.Income);
-                    })
-                    .y(function(d) {
-                        return yScale(d["Tax"]);
-                    })
-                    .interpolate("basis");
-                var lineGenEff = d3.svg.line()
-                    .x(function(d) {
-                        return xScale(d.Income);
-                    })
-                    .y(function(d) {
-                        return yScale2(d["Effective Rate"]);
-                    })
-                    .interpolate("basis");
-                var lineGenMarg = d3.svg.line()
-                    .x(function(d) {
-                        return xScale(d.Income);
-                    })
-                    .y(function(d) {
-                        return yScale2(d["Marginal Rate"]);
-                    })
-                    .interpolate("basis");
-
-                function InitChart(data) {
-                    var vis = d3.select("#visualisation");
-                    
-                    vis.append("svg:g")
-                        .attr("class", "x axis")
-                        .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
-                        .call(xAxis);
-                    vis.append("svg:g")
-                        .attr("class", "y axis")
-                        .attr("transform", "translate(" + (WIDTH - MARGINS.right) + ",0)")
-                        .call(yAxis);
-                    vis.append("svg:g")
-                        .attr("class", "y axis")
-                        .attr("transform", "translate(" + (MARGINS.left) + ",0)")
-                        .call(yAxis2);
-
-                    vis.selectAll("line.horizontalGrid").data(yScale2.ticks(4)).enter()
-                        .append("line")
-                        .attr({
-                            "class": "horizontalGrid",
-                            "x1": MARGINS.right,
-                            "x2": WIDTH - MARGINS.right,
-                            "y1": function(d) { return yScale2(d); },
-                            "y2": function(d) { return yScale2(d); },
-                            "fill": "none",
-                            "shape-rendering": "crispEdges",
-                            "stroke": "grey",
-                            "stroke-width": "1px"
-                        });
-
-                    var color = d3.scale.category10()
-                        .domain(["Tax", "Effective Rate", "Marginal Rate"]);
-
-
-
-
-                    var brackets = add_brackets(on_brackets, fed_brackets);
-                    brackets = subtract_brackets(brackets, on_personal_amt);
-                    brackets = subtract_brackets(brackets, fed_personal_amt);
-
-                    var data2 = [];
-
-                    for (var i = 0; i <= 250000; i += 100) {
-                        data2.push({
-                            "Income": i,
-                            "Tax": taxes_owed(i, brackets),
-                            "Effective Rate": effective_rate(i, brackets),
-                            "Marginal Rate": marginal_rate(i, brackets)
-                        });
-                    }
-
-
-
-
-
-                    vis.append('svg:path')
-                        .attr('class', 'tax')
-                        .attr('d', lineGenTax(data))
-                        .attr('stroke', color("Tax"))
-                        .attr('stroke-width', 2)
-                        .attr('fill', 'none')
-                        .transition()
-                        .delay(2000)
-                        .duration(2000)
-                        .attr('d', lineGenTax(data2))
-                        ;
-                    vis.append('svg:path')
-                        .attr('class', 'effective')
-                        .attr('d', lineGenEff(data))
-                        .attr('stroke', color("Effective Rate"))
-                        .attr('stroke-width', 2)
-                        .attr('fill', 'none')
-                        .transition()
-                        .delay(2000)
-                        .duration(2000)
-                        .attr('d', lineGenEff(data2))
-                        ;
-                    vis.append('svg:path')
-                        .attr('class', 'marginal')
-                        .attr('d', lineGenMarg(data))
-                        .attr('stroke', color("Marginal Rate"))
-                        .attr('stroke-width', 2)
-                        .attr('fill', 'none')
-                        .transition()
-                        .delay(2000)
-                        .duration(2000)
-                        .attr('d', lineGenMarg(data2))
-                        ;
-                }
-                InitChart(data);
-            </script>
+            <svg id="visualisation" width="1000" height="500"></svg>
  
         </div>
  
