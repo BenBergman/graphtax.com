@@ -28,14 +28,14 @@ function add_brackets(a, b) {
     }
 
     for (; i < a.length; i++) {
-        result.push(a[i]);
+        result.push([a[i][0], a[i][1]]);
         if (b[b.length - 1][0] === Infinity) {
             result[result.length - 1][1] += b[b.length - 1][1];
         }
     }
 
     for (; j < b.length; j++) {
-        result.push(b[j]);
+        result.push([b[j][0], b[j][1]]);
         if (a[a.length - 1][0] === Infinity) {
             result[result.length - 1][1] += a[a.length - 1][1];
         }
@@ -62,11 +62,11 @@ function subtract_brackets(a, b) {
     }
 
     for (; i < a.length; i++) {
-        result.push(a[i]);
+        result.push([a[i][0], a[i][1]]);
     }
 
     for (; j < b.length; j++) {
-        result.push(b[j]);
+        result.push([b[j][0], b[j][1]]);
     }
 
     return result;

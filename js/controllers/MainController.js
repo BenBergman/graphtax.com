@@ -13,45 +13,47 @@ app.controller("MainController", ["$scope", function($scope) {
             .style("height", function(d) { return d + "%"; })
             .style("left", function(d) { return (index++) * (bar_width + 2) + "px"; });
     };
+    $scope.rawBrackets = {
+        "Federal": {
+            "income": [
+                [45282, 0.1500],
+                [90563, 0.2050],
+                [140388, 0.2600],
+                [200000, 0.2900],
+                [Infinity, 0.3300]
+            ],
+            "personalAmount": [
+                [11474, 0.1500]
+            ]
+        },
+        "Manitoba": {
+            "income": [
+                [31000, 0.1080],
+                [67000, 0.1275],
+                [Infinity, 0.1740]
+            ],
+            "personalAmount": [
+                [9134, 0.1080]
+            ]
+        },
+        "Ontario": {
+            "income": [
+                [41536, 0.0505],
+                [83075, 0.0915],
+                [150000, 0.1116],
+                [220000, 0.1216],
+                [Infinity, 0.1316]
+            ],
+            "personalAmount": [
+                [10011, 0.0505]
+            ]
+        }
+    };
     $scope.changeProvince = function() {
-        console.log('changing province...');
-        var fed_brackets = [
-            [45282, 0.1500],
-            [90563, 0.2050],
-            [140388, 0.2600],
-            [200000, 0.2900],
-            [Infinity, 0.3300]
-        ];
+        var brackets = add_brackets($scope.rawBrackets.Manitoba.income, $scope.rawBrackets.Federal.income);
+        brackets = subtract_brackets(brackets, $scope.rawBrackets.Manitoba.personalAmount);
+        brackets = subtract_brackets(brackets, $scope.rawBrackets.Federal.personalAmount);
 
-        var mb_brackets = [
-            [31000, 0.1080],
-            [67000, 0.1275],
-            [Infinity, 0.1740]
-        ];
-
-        var on_brackets = [
-            [41536, 0.0505],
-            [83075, 0.0915],
-            [150000, 0.1116],
-            [220000, 0.1216],
-            [Infinity, 0.1316]
-        ];
-
-        var fed_personal_amt = [
-            [11474, 0.1500]
-        ];
-
-        var mb_personal_amt = [
-            [9134, 0.1080]
-        ];
-
-        var on_personal_amt = [
-            [10011, 0.0505]
-        ];
-
-        var brackets = add_brackets(mb_brackets, fed_brackets);
-        brackets = subtract_brackets(brackets, mb_personal_amt);
-        brackets = subtract_brackets(brackets, fed_personal_amt);
 
         var data = [];
 
