@@ -25,23 +25,14 @@ app.directive('taxChart', function() {
                 });
             }
 
-            var WIDTH = 1000,
-                HEIGHT = 500,
-                    MARGINS = {
-                        top: 20,
-                        right: 50,
-                        bottom: 20,
-                        left: 50
-                    },
-
-                xScale = d3.scale.linear()
-                    .range([MARGINS.left, WIDTH - MARGINS.right])
+            var xScale = d3.scale.linear()
+                    .range([scope.margins.left, scope.width - scope.margins.right])
                     .domain([0, d3.max(data, function(d) { return d["Income"]; })]),
                 yScale = d3.scale.linear()
-                    .range([HEIGHT - MARGINS.top, MARGINS.bottom])
+                    .range([scope.height - scope.margins.top, scope.margins.bottom])
                     .domain([0, d3.max(data, function(d) { return d["Tax"]; })]),
                 yScale2 = d3.scale.linear()
-                    .range([HEIGHT - MARGINS.top, MARGINS.bottom])
+                    .range([scope.height - scope.margins.top, scope.margins.bottom])
                     .domain([0, d3.max(data, function(d) { return d["Marginal Rate"]; })]),
 
                 xAxis = d3.svg.axis()
@@ -70,23 +61,23 @@ app.directive('taxChart', function() {
 
             svg.append("svg:g")
                 .attr("class", "x axis")
-                .attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
+                .attr("transform", "translate(0," + (scope.height - scope.margins.bottom) + ")")
                 .call(xAxis);
             svg.append("svg:g")
                 .attr("class", "y axis")
-                .attr("transform", "translate(" + (WIDTH - MARGINS.right) + ",0)")
+                .attr("transform", "translate(" + (scope.width - scope.margins.right) + ",0)")
                 .call(yAxis);
             svg.append("svg:g")
                 .attr("class", "y axis")
-                .attr("transform", "translate(" + (MARGINS.left) + ",0)")
+                .attr("transform", "translate(" + (scope.margins.left) + ",0)")
                 .call(yAxis2);
 
             svg.selectAll("line.horizontalGrid").data(yScale2.ticks(4)).enter()
                 .append("line")
                 .attr({
                     "class": "horizontalGrid",
-                    "x1": MARGINS.right,
-                    "x2": WIDTH - MARGINS.right,
+                    "x1": scope.margins.right,
+                    "x2": scope.width - scope.margins.right,
                     "y1": function(d) { return yScale2(d); },
                     "y2": function(d) { return yScale2(d); },
                     "fill": "none",

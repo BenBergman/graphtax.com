@@ -49,6 +49,14 @@ app.controller("MainController", ["$scope", function($scope) {
             ]
         }
     };
+    $scope.width = 1000;
+    $scope.height = 500;
+    $scope.margins = {
+        top: 20,
+        right: 50,
+        bottom: 20,
+        left: 50
+    }
     $scope.changeProvince = function() {
         var brackets = add_brackets($scope.rawBrackets.Manitoba.income, $scope.rawBrackets.Federal.income);
         brackets = subtract_brackets(brackets, $scope.rawBrackets.Manitoba.personalAmount);
@@ -69,23 +77,14 @@ app.controller("MainController", ["$scope", function($scope) {
 
 
 
-        var WIDTH = 1000,
-            HEIGHT = 500,
-                MARGINS = {
-                    top: 20,
-                    right: 50,
-                    bottom: 20,
-                    left: 50
-                },
-
-            xScale = d3.scale.linear()
-                .range([MARGINS.left, WIDTH - MARGINS.right])
+        var xScale = d3.scale.linear()
+                .range([$scope.margins.left, $scope.width - $scope.margins.right])
                 .domain([0, d3.max(data, function(d) { return d["Income"]; })]),
             yScale = d3.scale.linear()
-                .range([HEIGHT - MARGINS.top, MARGINS.bottom])
+                .range([$scope.height - $scope.margins.top, $scope.margins.bottom])
                 .domain([0, d3.max(data, function(d) { return d["Tax"]; })]),
             yScale2 = d3.scale.linear()
-                .range([HEIGHT - MARGINS.top, MARGINS.bottom])
+                .range([$scope.height - $scope.margins.top, $scope.margins.bottom])
                 .domain([0, d3.max(data, function(d) { return d["Marginal Rate"]; })]);
 
 
