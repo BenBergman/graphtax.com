@@ -65,8 +65,8 @@ app.controller("MainController", ["$scope", function($scope) {
     $scope.yScale2 = d3.scale.linear()
         .range([$scope.height - $scope.margins.top, $scope.margins.bottom]);
     $scope.changeProvince = function() {
-        var brackets = add_brackets($scope.rawBrackets.Manitoba.income, $scope.rawBrackets.Federal.income);
-        brackets = subtract_brackets(brackets, $scope.rawBrackets.Manitoba.personalAmount);
+        var brackets = add_brackets($scope.rawBrackets.Ontario.income, $scope.rawBrackets.Federal.income);
+        brackets = subtract_brackets(brackets, $scope.rawBrackets.Ontario.personalAmount);
         brackets = subtract_brackets(brackets, $scope.rawBrackets.Federal.personalAmount);
 
 
@@ -80,44 +80,5 @@ app.controller("MainController", ["$scope", function($scope) {
                 "Marginal Rate": marginal_rate(i, brackets)
             });
         }
-
-
-
-
-        $scope.xScale
-            .domain([0, d3.max($scope.data, function(d) { return d["Income"]; })]);
-        $scope.yScale
-            .domain([0, d3.max($scope.data, function(d) { return d["Tax"]; })]),
-        $scope.yScale2
-            .domain([0, d3.max($scope.data, function(d) { return d["Marginal Rate"]; })]);
-
-
-
-        var lineGenTax = d3.svg.line()
-            .x(function(d) { return $scope.xScale(d.Income); })
-            .y(function(d) { return $scope.yScale(d["Tax"]); })
-            .interpolate("basis");
-        var lineGenEff = d3.svg.line()
-            .x(function(d) { return $scope.xScale(d.Income); })
-            .y(function(d) { return $scope.yScale2(d["Effective Rate"]); })
-            .interpolate("basis");
-        var lineGenMarg = d3.svg.line()
-            .x(function(d) { return $scope.xScale(d.Income); })
-            .y(function(d) { return $scope.yScale2(d["Marginal Rate"]); })
-            .interpolate("basis");
-
-
-        d3.select('#tax')
-            .transition()
-            .duration(2000)
-            .attr('d', lineGenTax($scope.data));
-        d3.select('#effective')
-            .transition()
-            .duration(2000)
-            .attr('d', lineGenEff($scope.data));
-        d3.select('#marginal')
-            .transition()
-            .duration(2000)
-            .attr('d', lineGenMarg($scope.data));
     };
 }]);

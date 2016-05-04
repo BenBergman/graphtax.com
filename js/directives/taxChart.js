@@ -14,17 +14,6 @@ app.directive('taxChart', function() {
             brackets = subtract_brackets(brackets, scope.rawBrackets.Manitoba.personalAmount);
             brackets = subtract_brackets(brackets, scope.rawBrackets.Federal.personalAmount);
 
-            scope.$watch('data', function(newData, oldData) {
-                console.log('data has changed');
-                console.log(newData[0]);
-                return scope.render(newData);
-            });
-
-            scope.render = function(data) {
-                console.log('rendering');
-                console.log(data[0]);
-            };
-
             scope.data = [];
 
             for (var i = 0; i <= 250000; i += 100) {
@@ -35,6 +24,57 @@ app.directive('taxChart', function() {
                     "Marginal Rate": marginal_rate(i, brackets)
                 });
             }
+
+            console.log('first data');
+                console.log(scope.data[1000]);
+            scope.$watch('data', function(newData, oldData) {
+                return scope.render(newData);
+            });
+
+            scope.render = function(data) {
+                console.log('rendering');
+                console.log(data[1000]);
+                /*
+                scope.xScale
+                    .domain([0, d3.max(scope.data, function(d) { return d["Income"]; })]);
+                scope.yScale
+                    .domain([0, d3.max(scope.data, function(d) { return d["Tax"]; })]),
+                scope.yScale2
+                    .domain([0, d3.max(scope.data, function(d) { return d["Marginal Rate"]; })]);
+                    */
+
+                var lineGenTax = d3.svg.line()
+                    .x(function(d) { return scope.xScale(d.Income); })
+                    .y(function(d) { return scope.yScale(d["Tax"]); })
+                    .interpolate("basis");
+                var lineGenEff = d3.svg.line()
+                    .x(function(d) { return scope.xScale(d.Income); })
+                    .y(function(d) { return scope.yScale2(d["Effective Rate"]); })
+                    .interpolate("basis");
+                var lineGenMarg = d3.svg.line()
+                    .x(function(d) { return scope.xScale(d.Income); })
+                    .y(function(d) { return scope.yScale2(d["Marginal Rate"]); })
+                    .interpolate("basis");
+
+                d3.select('#tax')
+                    .transition()
+                    .duration(2000)
+                    .attr('d', lineGenTax(scope.data));
+                d3.select('#effective')
+                    .transition()
+                    .duration(2000)
+                    .attr('d', lineGenEff(scope.data));
+                d3.select('#marginal')
+                    .transition()
+                    .duration(2000)
+                    .attr('d', lineGenMarg(scope.data));
+
+                yAxis.scale(scope.xScale);
+                d3.select('#y')
+                    .transition()
+                    .duration(2000)
+                    .call(yAxis)
+            };
 
             scope.xScale
                 .domain([0, d3.max(scope.data, function(d) { return d["Income"]; })]);
@@ -76,7 +116,7 @@ app.directive('taxChart', function() {
                 .attr("transform", "translate(" + (scope.width - scope.margins.right) + ",0)")
                 .call(yAxis);
             svg.append("svg:g")
-                .attr("class", "y axis")
+                .attr("class", "y2 axis")
                 .attr("transform", "translate(" + (scope.margins.left) + ",0)")
                 .call(yAxis2);
 
@@ -100,55 +140,24 @@ app.directive('taxChart', function() {
 
 
 
-            var brackets = add_brackets(scope.rawBrackets.Ontario.income, scope.rawBrackets.Federal.income);
-            brackets = subtract_brackets(brackets, scope.rawBrackets.Ontario.personalAmount);
-            brackets = subtract_brackets(brackets, scope.rawBrackets.Federal.personalAmount);
-
-            var data2 = [];
-
-            for (var i = 0; i <= 250000; i += 100) {
-                data2.push({
-                    "Income": i,
-                    "Tax": taxes_owed(i, brackets),
-                    "Effective Rate": effective_rate(i, brackets),
-                    "Marginal Rate": marginal_rate(i, brackets)
-                });
-            }
-
-
-
-
-
             svg.append('svg:path')
                 .attr('id', 'tax')
                 .attr('d', lineGenTax(scope.data))
                 .attr('stroke', color("Tax"))
                 .attr('stroke-width', 2)
-                .attr('fill', 'none')
-                .transition()
-                .delay(2000)
-                .duration(2000)
-                .attr('d', lineGenTax(data2));
+                .attr('fill', 'none');
             svg.append('svg:path')
                 .attr('id', 'effective')
                 .attr('d', lineGenEff(scope.data))
                 .attr('stroke', color("Effective Rate"))
                 .attr('stroke-width', 2)
-                .attr('fill', 'none')
-                .transition()
-                .delay(2000)
-                .duration(2000)
-                .attr('d', lineGenEff(data2));
+                .attr('fill', 'none');
             svg.append('svg:path')
                 .attr('id', 'marginal')
                 .attr('d', lineGenMarg(scope.data))
                 .attr('stroke', color("Marginal Rate"))
                 .attr('stroke-width', 2)
-                .attr('fill', 'none')
-                .transition()
-                .delay(2000)
-                .duration(2000)
-                .attr('d', lineGenMarg(data2));
+                .attr('fill', 'none');
         }
     }
 })
