@@ -41,15 +41,11 @@ app.directive('taxChart', function() {
                 });
             }
 
-            console.log('first data');
-                console.log(scope.data[1000]);
             scope.$watch('data', function(newData, oldData) {
                 return scope.render(newData);
             });
 
             scope.render = function(data) {
-                console.log('rendering');
-                console.log(data[1000]);
                 /*
                 xScale
                     .domain([0, d3.max(scope.data, function(d) { return d["Income"]; })]);
