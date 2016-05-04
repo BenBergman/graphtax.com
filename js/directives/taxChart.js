@@ -35,13 +35,13 @@ app.directive('taxChart', function() {
             }
 
             var incomeScale = d3.scale.linear()
-                .domain([0, d3.max(scope.data, function(d) { return d["Income"]; })]);
+                .domain([0, d3.max(scope.data, function(d) { return d["Income"]; })])
                 .range([margins.left, width - margins.right]);
             var owedScale = d3.scale.linear()
-                .domain([0, d3.max(scope.data, function(d) { return d["Tax"]; })]);
+                .domain([0, d3.max(scope.data, function(d) { return d["Tax"]; })])
                 .range([height - margins.top, margins.bottom]);
             var rateScale = d3.scale.linear()
-                .domain([0, d3.max(scope.data, function(d) { return d["Marginal Rate"]; })]);
+                .domain([0, d3.max(scope.data, function(d) { return d["Marginal Rate"]; })])
                 .range([height - margins.top, margins.bottom]);
 
             var incomeAxis = d3.svg.axis()
