@@ -89,13 +89,13 @@ app.directive('taxChart', function() {
             yScale2
                 .domain([0, d3.max(scope.data, function(d) { return d["Marginal Rate"]; })]);
 
-            var xAxis = d3.svg.axis()
+            var incomeAxis = d3.svg.axis()
                     .scale(xScale)
                     .orient("bottom"),
-                yAxis = d3.svg.axis()
+                owedAxis = d3.svg.axis()
                     .scale(yScale)
                     .orient("right"),
-                yAxis2 = d3.svg.axis()
+                rateAxis = d3.svg.axis()
                     .scale(yScale2)
                     .orient("left");
 
@@ -114,17 +114,17 @@ app.directive('taxChart', function() {
 
 
             svg.append("svg:g")
-                .attr("class", "x axis")
+                .attr("class", "x axis incomeaxis")
                 .attr("transform", "translate(0," + (height - margins.bottom) + ")")
-                .call(xAxis);
+                .call(incomeAxis);
             svg.append("svg:g")
-                .attr("class", "y axis")
+                .attr("class", "y axis owedaxis")
                 .attr("transform", "translate(" + (width - margins.right) + ",0)")
-                .call(yAxis);
+                .call(owedAxis);
             svg.append("svg:g")
-                .attr("class", "y2 axis")
+                .attr("class", "y axis rateaxis")
                 .attr("transform", "translate(" + (margins.left) + ",0)")
-                .call(yAxis2);
+                .call(rateAxis);
 
             svg.selectAll("line.horizontalGrid").data(yScale2.ticks(4)).enter()
                 .append("line")
