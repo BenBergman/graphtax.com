@@ -34,47 +34,6 @@ app.directive('taxChart', function() {
                 });
             }
 
-            scope.$watch('data', function(newData, oldData) {
-                return scope.render(newData);
-            });
-
-            scope.render = function(data) {
-                /*
-                incomeScale
-                    .domain([0, d3.max(scope.data, function(d) { return d["Income"]; })]);
-                owedScale
-                    .domain([0, d3.max(scope.data, function(d) { return d["Tax"]; })]),
-                rateScale
-                    .domain([0, d3.max(scope.data, function(d) { return d["Marginal Rate"]; })]);
-
-                var lineGenTax = d3.svg.line()
-                    .x(function(d) { return incomeScale(d.Income); })
-                    .y(function(d) { return owedScale(d["Tax"]); })
-                    .interpolate("basis");
-                var lineGenEff = d3.svg.line()
-                    .x(function(d) { return incomeScale(d.Income); })
-                    .y(function(d) { return rateScale(d["Effective Rate"]); })
-                    .interpolate("basis");
-                var lineGenMarg = d3.svg.line()
-                    .x(function(d) { return incomeScale(d.Income); })
-                    .y(function(d) { return rateScale(d["Marginal Rate"]); })
-                    .interpolate("basis");
-                    */
-
-                d3.select('#tax')
-                    .transition()
-                    .duration(2000)
-                    .attr('d', lineGenTax(scope.data));
-                d3.select('#effective')
-                    .transition()
-                    .duration(2000)
-                    .attr('d', lineGenEff(scope.data));
-                d3.select('#marginal')
-                    .transition()
-                    .duration(2000)
-                    .attr('d', lineGenMarg(scope.data));
-            };
-
             var incomeScale = d3.scale.linear()
                 .domain([0, d3.max(scope.data, function(d) { return d["Income"]; })]);
                 .range([margins.left, width - margins.right]);
@@ -160,6 +119,47 @@ app.directive('taxChart', function() {
                 .attr('stroke', color("Marginal Rate"))
                 .attr('stroke-width', 2)
                 .attr('fill', 'none');
+
+            scope.$watch('data', function(newData, oldData) {
+                return scope.render(newData);
+            });
+
+            scope.render = function(data) {
+                /*
+                incomeScale
+                    .domain([0, d3.max(scope.data, function(d) { return d["Income"]; })]);
+                owedScale
+                    .domain([0, d3.max(scope.data, function(d) { return d["Tax"]; })]),
+                rateScale
+                    .domain([0, d3.max(scope.data, function(d) { return d["Marginal Rate"]; })]);
+
+                var lineGenTax = d3.svg.line()
+                    .x(function(d) { return incomeScale(d.Income); })
+                    .y(function(d) { return owedScale(d["Tax"]); })
+                    .interpolate("basis");
+                var lineGenEff = d3.svg.line()
+                    .x(function(d) { return incomeScale(d.Income); })
+                    .y(function(d) { return rateScale(d["Effective Rate"]); })
+                    .interpolate("basis");
+                var lineGenMarg = d3.svg.line()
+                    .x(function(d) { return incomeScale(d.Income); })
+                    .y(function(d) { return rateScale(d["Marginal Rate"]); })
+                    .interpolate("basis");
+                    */
+
+                d3.select('#tax')
+                    .transition()
+                    .duration(2000)
+                    .attr('d', lineGenTax(scope.data));
+                d3.select('#effective')
+                    .transition()
+                    .duration(2000)
+                    .attr('d', lineGenEff(scope.data));
+                d3.select('#marginal')
+                    .transition()
+                    .duration(2000)
+                    .attr('d', lineGenMarg(scope.data));
+            };
         }
     }
 })
