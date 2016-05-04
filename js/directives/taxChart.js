@@ -14,10 +14,21 @@ app.directive('taxChart', function() {
             brackets = subtract_brackets(brackets, scope.rawBrackets.Manitoba.personalAmount);
             brackets = subtract_brackets(brackets, scope.rawBrackets.Federal.personalAmount);
 
-            var data = [];
+            scope.$watch('data', function(newData, oldData) {
+                console.log('data has changed');
+                console.log(newData[0]);
+                return scope.render(newData);
+            });
+
+            scope.render = function(data) {
+                console.log('rendering');
+                console.log(data[0]);
+            };
+
+            scope.data = [];
 
             for (var i = 0; i <= 250000; i += 100) {
-                data.push({
+                scope.data.push({
                     "Income": i,
                     "Tax": taxes_owed(i, brackets),
                     "Effective Rate": effective_rate(i, brackets),
@@ -26,11 +37,11 @@ app.directive('taxChart', function() {
             }
 
             scope.xScale
-                .domain([0, d3.max(data, function(d) { return d["Income"]; })]);
+                .domain([0, d3.max(scope.data, function(d) { return d["Income"]; })]);
             scope.yScale
-                .domain([0, d3.max(data, function(d) { return d["Tax"]; })]);
+                .domain([0, d3.max(scope.data, function(d) { return d["Tax"]; })]);
             scope.yScale2
-                .domain([0, d3.max(data, function(d) { return d["Marginal Rate"]; })]);
+                .domain([0, d3.max(scope.data, function(d) { return d["Marginal Rate"]; })]);
 
             var xAxis = d3.svg.axis()
                     .scale(scope.xScale)
@@ -110,7 +121,7 @@ app.directive('taxChart', function() {
 
             svg.append('svg:path')
                 .attr('id', 'tax')
-                .attr('d', lineGenTax(data))
+                .attr('d', lineGenTax(scope.data))
                 .attr('stroke', color("Tax"))
                 .attr('stroke-width', 2)
                 .attr('fill', 'none')
@@ -120,7 +131,7 @@ app.directive('taxChart', function() {
                 .attr('d', lineGenTax(data2));
             svg.append('svg:path')
                 .attr('id', 'effective')
-                .attr('d', lineGenEff(data))
+                .attr('d', lineGenEff(scope.data))
                 .attr('stroke', color("Effective Rate"))
                 .attr('stroke-width', 2)
                 .attr('fill', 'none')
@@ -130,7 +141,7 @@ app.directive('taxChart', function() {
                 .attr('d', lineGenEff(data2));
             svg.append('svg:path')
                 .attr('id', 'marginal')
-                .attr('d', lineGenMarg(data))
+                .attr('d', lineGenMarg(scope.data))
                 .attr('stroke', color("Marginal Rate"))
                 .attr('stroke-width', 2)
                 .attr('fill', 'none')

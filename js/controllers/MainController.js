@@ -49,6 +49,7 @@ app.controller("MainController", ["$scope", function($scope) {
             ]
         }
     };
+    $scope.data = [];
     $scope.width = 1000;
     $scope.height = 500;
     $scope.margins = {
@@ -69,10 +70,10 @@ app.controller("MainController", ["$scope", function($scope) {
         brackets = subtract_brackets(brackets, $scope.rawBrackets.Federal.personalAmount);
 
 
-        var data = [];
+        $scope.data = [];
 
         for (var i = 0; i <= 250000; i += 100) {
-            data.push({
+            $scope.data.push({
                 "Income": i,
                 "Tax": taxes_owed(i, brackets),
                 "Effective Rate": effective_rate(i, brackets),
@@ -84,11 +85,11 @@ app.controller("MainController", ["$scope", function($scope) {
 
 
         $scope.xScale
-            .domain([0, d3.max(data, function(d) { return d["Income"]; })]);
+            .domain([0, d3.max($scope.data, function(d) { return d["Income"]; })]);
         $scope.yScale
-            .domain([0, d3.max(data, function(d) { return d["Tax"]; })]),
+            .domain([0, d3.max($scope.data, function(d) { return d["Tax"]; })]),
         $scope.yScale2
-            .domain([0, d3.max(data, function(d) { return d["Marginal Rate"]; })]);
+            .domain([0, d3.max($scope.data, function(d) { return d["Marginal Rate"]; })]);
 
 
 
@@ -109,14 +110,14 @@ app.controller("MainController", ["$scope", function($scope) {
         d3.select('#tax')
             .transition()
             .duration(2000)
-            .attr('d', lineGenTax(data));
+            .attr('d', lineGenTax($scope.data));
         d3.select('#effective')
             .transition()
             .duration(2000)
-            .attr('d', lineGenEff(data));
+            .attr('d', lineGenEff($scope.data));
         d3.select('#marginal')
             .transition()
             .duration(2000)
-            .attr('d', lineGenMarg(data));
+            .attr('d', lineGenMarg($scope.data));
     };
 }]);
