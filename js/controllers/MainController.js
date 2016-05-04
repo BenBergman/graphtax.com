@@ -56,7 +56,13 @@ app.controller("MainController", ["$scope", function($scope) {
         right: 50,
         bottom: 20,
         left: 50
-    }
+    };
+    $scope.xScale = d3.scale.linear()
+        .range([$scope.margins.left, $scope.width - $scope.margins.right]);
+    $scope.yScale = d3.scale.linear()
+        .range([$scope.height - $scope.margins.top, $scope.margins.bottom]);
+    $scope.yScale2 = d3.scale.linear()
+        .range([$scope.height - $scope.margins.top, $scope.margins.bottom]);
     $scope.changeProvince = function() {
         var brackets = add_brackets($scope.rawBrackets.Manitoba.income, $scope.rawBrackets.Federal.income);
         brackets = subtract_brackets(brackets, $scope.rawBrackets.Manitoba.personalAmount);
@@ -77,29 +83,26 @@ app.controller("MainController", ["$scope", function($scope) {
 
 
 
-        var xScale = d3.scale.linear()
-                .range([$scope.margins.left, $scope.width - $scope.margins.right])
-                .domain([0, d3.max(data, function(d) { return d["Income"]; })]),
-            yScale = d3.scale.linear()
-                .range([$scope.height - $scope.margins.top, $scope.margins.bottom])
-                .domain([0, d3.max(data, function(d) { return d["Tax"]; })]),
-            yScale2 = d3.scale.linear()
-                .range([$scope.height - $scope.margins.top, $scope.margins.bottom])
-                .domain([0, d3.max(data, function(d) { return d["Marginal Rate"]; })]);
+        $scope.xScale
+            .domain([0, d3.max(data, function(d) { return d["Income"]; })]);
+        $scope.yScale
+            .domain([0, d3.max(data, function(d) { return d["Tax"]; })]),
+        $scope.yScale2
+            .domain([0, d3.max(data, function(d) { return d["Marginal Rate"]; })]);
 
 
 
         var lineGenTax = d3.svg.line()
-            .x(function(d) { return xScale(d.Income); })
-            .y(function(d) { return yScale(d["Tax"]); })
+            .x(function(d) { return $scope.xScale(d.Income); })
+            .y(function(d) { return $scope.yScale(d["Tax"]); })
             .interpolate("basis");
         var lineGenEff = d3.svg.line()
-            .x(function(d) { return xScale(d.Income); })
-            .y(function(d) { return yScale2(d["Effective Rate"]); })
+            .x(function(d) { return $scope.xScale(d.Income); })
+            .y(function(d) { return $scope.yScale2(d["Effective Rate"]); })
             .interpolate("basis");
         var lineGenMarg = d3.svg.line()
-            .x(function(d) { return xScale(d.Income); })
-            .y(function(d) { return yScale2(d["Marginal Rate"]); })
+            .x(function(d) { return $scope.xScale(d.Income); })
+            .y(function(d) { return $scope.yScale2(d["Marginal Rate"]); })
             .interpolate("basis");
 
 

@@ -25,37 +25,34 @@ app.directive('taxChart', function() {
                 });
             }
 
-            var xScale = d3.scale.linear()
-                    .range([scope.margins.left, scope.width - scope.margins.right])
-                    .domain([0, d3.max(data, function(d) { return d["Income"]; })]),
-                yScale = d3.scale.linear()
-                    .range([scope.height - scope.margins.top, scope.margins.bottom])
-                    .domain([0, d3.max(data, function(d) { return d["Tax"]; })]),
-                yScale2 = d3.scale.linear()
-                    .range([scope.height - scope.margins.top, scope.margins.bottom])
-                    .domain([0, d3.max(data, function(d) { return d["Marginal Rate"]; })]),
+            scope.xScale
+                .domain([0, d3.max(data, function(d) { return d["Income"]; })]);
+            scope.yScale
+                .domain([0, d3.max(data, function(d) { return d["Tax"]; })]);
+            scope.yScale2
+                .domain([0, d3.max(data, function(d) { return d["Marginal Rate"]; })]);
 
-                xAxis = d3.svg.axis()
-                    .scale(xScale)
+            var xAxis = d3.svg.axis()
+                    .scale(scope.xScale)
                     .orient("bottom"),
                 yAxis = d3.svg.axis()
-                    .scale(yScale)
+                    .scale(scope.yScale)
                     .orient("right"),
                 yAxis2 = d3.svg.axis()
-                    .scale(yScale2)
+                    .scale(scope.yScale2)
                     .orient("left");
 
             var lineGenTax = d3.svg.line()
-                .x(function(d) { return xScale(d.Income); })
-                .y(function(d) { return yScale(d["Tax"]); })
+                .x(function(d) { return scope.xScale(d.Income); })
+                .y(function(d) { return scope.yScale(d["Tax"]); })
                 .interpolate("basis");
             var lineGenEff = d3.svg.line()
-                .x(function(d) { return xScale(d.Income); })
-                .y(function(d) { return yScale2(d["Effective Rate"]); })
+                .x(function(d) { return scope.xScale(d.Income); })
+                .y(function(d) { return scope.yScale2(d["Effective Rate"]); })
                 .interpolate("basis");
             var lineGenMarg = d3.svg.line()
-                .x(function(d) { return xScale(d.Income); })
-                .y(function(d) { return yScale2(d["Marginal Rate"]); })
+                .x(function(d) { return scope.xScale(d.Income); })
+                .y(function(d) { return scope.yScale2(d["Marginal Rate"]); })
                 .interpolate("basis");
 
 
@@ -72,14 +69,14 @@ app.directive('taxChart', function() {
                 .attr("transform", "translate(" + (scope.margins.left) + ",0)")
                 .call(yAxis2);
 
-            svg.selectAll("line.horizontalGrid").data(yScale2.ticks(4)).enter()
+            svg.selectAll("line.horizontalGrid").data(scope.yScale2.ticks(4)).enter()
                 .append("line")
                 .attr({
                     "class": "horizontalGrid",
                     "x1": scope.margins.right,
                     "x2": scope.width - scope.margins.right,
-                    "y1": function(d) { return yScale2(d); },
-                    "y2": function(d) { return yScale2(d); },
+                    "y1": function(d) { return scope.yScale2(d); },
+                    "y2": function(d) { return scope.yScale2(d); },
                     "fill": "none",
                     "shape-rendering": "crispEdges",
                     "stroke": "grey",
