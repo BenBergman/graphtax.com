@@ -68,6 +68,20 @@ app.directive('taxChart', function() {
                 .interpolate("basis");
 
 
+            svg.selectAll("line.horizontalGrid").data(rateScale.ticks(4)).enter()
+                .append("line")
+                .attr({
+                    "class": "horizontalGrid",
+                    "x1": margins.right,
+                    "x2": width - margins.right,
+                    "y1": function(d) { return rateScale(d); },
+                    "y2": function(d) { return rateScale(d); },
+                    "fill": "none",
+                    "shape-rendering": "crispEdges",
+                    "stroke": "lightgrey",
+                    "stroke-width": "1px"
+                });
+
             svg.append("svg:g")
                 .attr("class", "x axis incomeaxis")
                 .attr("transform", "translate(0," + (height - margins.bottom) + ")")
@@ -80,20 +94,6 @@ app.directive('taxChart', function() {
                 .attr("class", "y axis rateaxis")
                 .attr("transform", "translate(" + (margins.left) + ",0)")
                 .call(rateAxis);
-
-            svg.selectAll("line.horizontalGrid").data(rateScale.ticks(4)).enter()
-                .append("line")
-                .attr({
-                    "class": "horizontalGrid",
-                    "x1": margins.right,
-                    "x2": width - margins.right,
-                    "y1": function(d) { return rateScale(d); },
-                    "y2": function(d) { return rateScale(d); },
-                    "fill": "none",
-                    "shape-rendering": "crispEdges",
-                    "stroke": "grey",
-                    "stroke-width": "1px"
-                });
 
             var color = d3.scale.category10()
                 .domain(["Tax", "Effective Rate", "Marginal Rate"]);
