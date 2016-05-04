@@ -2,12 +2,28 @@ app.directive('taxChart', function() {
     return {
         restrict: 'E',
         link: function(scope, element, attrs) {
+            var width = 1000;
+            var height = 500;
+            var margins = {
+                top: 20,
+                right: 50,
+                bottom: 20,
+                left: 50
+            };
+
+            var xScale = d3.scale.linear()
+                .range([margins.left, width - margins.right]);
+            var yScale = d3.scale.linear()
+                .range([height - margins.top, margins.bottom]);
+            var yScale2 = d3.scale.linear()
+                .range([height - margins.top, margins.bottom]);
+
             var svg = d3.select(element[0])
                 .append("svg")
                 .attr("id", "directive")
                 .style({
-                    "width": "100%",
-                    "height": 500
+                    "width": width,
+                    "height": height
                 });
 
             var brackets = add_brackets(scope.rawBrackets.Manitoba.income, scope.rawBrackets.Federal.income);
@@ -35,25 +51,25 @@ app.directive('taxChart', function() {
                 console.log('rendering');
                 console.log(data[1000]);
                 /*
-                scope.xScale
+                xScale
                     .domain([0, d3.max(scope.data, function(d) { return d["Income"]; })]);
-                scope.yScale
+                yScale
                     .domain([0, d3.max(scope.data, function(d) { return d["Tax"]; })]),
-                scope.yScale2
+                yScale2
                     .domain([0, d3.max(scope.data, function(d) { return d["Marginal Rate"]; })]);
                     */
 
                 var lineGenTax = d3.svg.line()
-                    .x(function(d) { return scope.xScale(d.Income); })
-                    .y(function(d) { return scope.yScale(d["Tax"]); })
+                    .x(function(d) { return xScale(d.Income); })
+                    .y(function(d) { return yScale(d["Tax"]); })
                     .interpolate("basis");
                 var lineGenEff = d3.svg.line()
-                    .x(function(d) { return scope.xScale(d.Income); })
-                    .y(function(d) { return scope.yScale2(d["Effective Rate"]); })
+                    .x(function(d) { return xScale(d.Income); })
+                    .y(function(d) { return yScale2(d["Effective Rate"]); })
                     .interpolate("basis");
                 var lineGenMarg = d3.svg.line()
-                    .x(function(d) { return scope.xScale(d.Income); })
-                    .y(function(d) { return scope.yScale2(d["Marginal Rate"]); })
+                    .x(function(d) { return xScale(d.Income); })
+                    .y(function(d) { return yScale2(d["Marginal Rate"]); })
                     .interpolate("basis");
 
                 d3.select('#tax')
@@ -69,65 +85,65 @@ app.directive('taxChart', function() {
                     .duration(2000)
                     .attr('d', lineGenMarg(scope.data));
 
-                yAxis.scale(scope.xScale);
+                yAxis.scale(xScale);
                 d3.select('#y')
                     .transition()
                     .duration(2000)
                     .call(yAxis)
             };
 
-            scope.xScale
+            xScale
                 .domain([0, d3.max(scope.data, function(d) { return d["Income"]; })]);
-            scope.yScale
+            yScale
                 .domain([0, d3.max(scope.data, function(d) { return d["Tax"]; })]);
-            scope.yScale2
+            yScale2
                 .domain([0, d3.max(scope.data, function(d) { return d["Marginal Rate"]; })]);
 
             var xAxis = d3.svg.axis()
-                    .scale(scope.xScale)
+                    .scale(xScale)
                     .orient("bottom"),
                 yAxis = d3.svg.axis()
-                    .scale(scope.yScale)
+                    .scale(yScale)
                     .orient("right"),
                 yAxis2 = d3.svg.axis()
-                    .scale(scope.yScale2)
+                    .scale(yScale2)
                     .orient("left");
 
             var lineGenTax = d3.svg.line()
-                .x(function(d) { return scope.xScale(d.Income); })
-                .y(function(d) { return scope.yScale(d["Tax"]); })
+                .x(function(d) { return xScale(d.Income); })
+                .y(function(d) { return yScale(d["Tax"]); })
                 .interpolate("basis");
             var lineGenEff = d3.svg.line()
-                .x(function(d) { return scope.xScale(d.Income); })
-                .y(function(d) { return scope.yScale2(d["Effective Rate"]); })
+                .x(function(d) { return xScale(d.Income); })
+                .y(function(d) { return yScale2(d["Effective Rate"]); })
                 .interpolate("basis");
             var lineGenMarg = d3.svg.line()
-                .x(function(d) { return scope.xScale(d.Income); })
-                .y(function(d) { return scope.yScale2(d["Marginal Rate"]); })
+                .x(function(d) { return xScale(d.Income); })
+                .y(function(d) { return yScale2(d["Marginal Rate"]); })
                 .interpolate("basis");
 
 
             svg.append("svg:g")
                 .attr("class", "x axis")
-                .attr("transform", "translate(0," + (scope.height - scope.margins.bottom) + ")")
+                .attr("transform", "translate(0," + (height - margins.bottom) + ")")
                 .call(xAxis);
             svg.append("svg:g")
                 .attr("class", "y axis")
-                .attr("transform", "translate(" + (scope.width - scope.margins.right) + ",0)")
+                .attr("transform", "translate(" + (width - margins.right) + ",0)")
                 .call(yAxis);
             svg.append("svg:g")
                 .attr("class", "y2 axis")
-                .attr("transform", "translate(" + (scope.margins.left) + ",0)")
+                .attr("transform", "translate(" + (margins.left) + ",0)")
                 .call(yAxis2);
 
-            svg.selectAll("line.horizontalGrid").data(scope.yScale2.ticks(4)).enter()
+            svg.selectAll("line.horizontalGrid").data(yScale2.ticks(4)).enter()
                 .append("line")
                 .attr({
                     "class": "horizontalGrid",
-                    "x1": scope.margins.right,
-                    "x2": scope.width - scope.margins.right,
-                    "y1": function(d) { return scope.yScale2(d); },
-                    "y2": function(d) { return scope.yScale2(d); },
+                    "x1": margins.right,
+                    "x2": width - margins.right,
+                    "y1": function(d) { return yScale2(d); },
+                    "y2": function(d) { return yScale2(d); },
                     "fill": "none",
                     "shape-rendering": "crispEdges",
                     "stroke": "grey",

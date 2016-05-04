@@ -50,20 +50,6 @@ app.controller("MainController", ["$scope", function($scope) {
         }
     };
     $scope.data = [];
-    $scope.width = 1000;
-    $scope.height = 500;
-    $scope.margins = {
-        top: 20,
-        right: 50,
-        bottom: 20,
-        left: 50
-    };
-    $scope.xScale = d3.scale.linear()
-        .range([$scope.margins.left, $scope.width - $scope.margins.right]);
-    $scope.yScale = d3.scale.linear()
-        .range([$scope.height - $scope.margins.top, $scope.margins.bottom]);
-    $scope.yScale2 = d3.scale.linear()
-        .range([$scope.height - $scope.margins.top, $scope.margins.bottom]);
     $scope.changeProvince = function() {
         var brackets = add_brackets($scope.rawBrackets.Ontario.income, $scope.rawBrackets.Federal.income);
         brackets = subtract_brackets(brackets, $scope.rawBrackets.Ontario.personalAmount);
