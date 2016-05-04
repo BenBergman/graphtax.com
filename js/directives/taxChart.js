@@ -53,7 +53,6 @@ app.directive('taxChart', function() {
                     .domain([0, d3.max(scope.data, function(d) { return d["Tax"]; })]),
                 yScale2
                     .domain([0, d3.max(scope.data, function(d) { return d["Marginal Rate"]; })]);
-                    */
 
                 var lineGenTax = d3.svg.line()
                     .x(function(d) { return xScale(d.Income); })
@@ -67,6 +66,7 @@ app.directive('taxChart', function() {
                     .x(function(d) { return xScale(d.Income); })
                     .y(function(d) { return yScale2(d["Marginal Rate"]); })
                     .interpolate("basis");
+                    */
 
                 d3.select('#tax')
                     .transition()
@@ -80,12 +80,6 @@ app.directive('taxChart', function() {
                     .transition()
                     .duration(2000)
                     .attr('d', lineGenMarg(scope.data));
-
-                yAxis.scale(xScale);
-                d3.select('#y')
-                    .transition()
-                    .duration(2000)
-                    .call(yAxis)
             };
 
             xScale
