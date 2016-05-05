@@ -19,8 +19,8 @@ app.directive('taxChart', function() {
                     "height": height
                 });
 
-            var brackets = add_brackets(scope.rawBrackets.Manitoba.income, scope.rawBrackets.Federal.income);
-            brackets = subtract_brackets(brackets, scope.rawBrackets.Manitoba.personalAmount);
+            var brackets = add_brackets(scope.rawBrackets[scope.currentProvince].income, scope.rawBrackets.Federal.income);
+            brackets = subtract_brackets(brackets, scope.rawBrackets[scope.currentProvince].personalAmount);
             brackets = subtract_brackets(brackets, scope.rawBrackets.Federal.personalAmount);
 
             scope.data = [];

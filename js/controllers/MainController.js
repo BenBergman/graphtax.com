@@ -1,4 +1,20 @@
 app.controller("MainController", ["$scope", function($scope) {
+    $scope.currentProvince = "Manitoba";
+    $scope.provinces = [
+        "Alberta",
+        "British Columbia",
+        "Manitoba",
+        "New Brunswick",
+        "Newfoundland & Labrador",
+        "Northwest Territories",
+        "Nova Scotia",
+        "Nunavut",
+        "Ontario",
+        "Prince Edward Island",
+        "Quebec",
+        "Saskatchewan",
+        "Yukon",
+    ];
     $scope.rawBrackets = {
         "Federal": {
             "income": [
@@ -162,11 +178,12 @@ app.controller("MainController", ["$scope", function($scope) {
         }
     };
     $scope.data = [];
-    $scope.changeProvince = function() {
-        var brackets = add_brackets($scope.rawBrackets.Ontario.income, $scope.rawBrackets.Federal.income);
-        brackets = subtract_brackets(brackets, $scope.rawBrackets.Ontario.personalAmount);
-        brackets = subtract_brackets(brackets, $scope.rawBrackets.Federal.personalAmount);
+    $scope.changeProvince = function(province) {
+        $scope.currentProvince = province;
 
+        var brackets = add_brackets($scope.rawBrackets[province].income, $scope.rawBrackets.Federal.income);
+        brackets = subtract_brackets(brackets, $scope.rawBrackets[province].personalAmount);
+        brackets = subtract_brackets(brackets, $scope.rawBrackets.Federal.personalAmount);
 
         $scope.data = [];
 
