@@ -125,7 +125,6 @@ app.directive('taxChart', function() {
             });
 
             scope.render = function(data) {
-                /*
                 incomeScale
                     .domain([0, d3.max(scope.data, function(d) { return d["Income"]; })]);
                 owedScale
@@ -145,7 +144,29 @@ app.directive('taxChart', function() {
                     .x(function(d) { return incomeScale(d.Income); })
                     .y(function(d) { return rateScale(d["Marginal Rate"]); })
                     .interpolate("basis");
-                    */
+
+                svg.selectAll("line.horizontalGrid").data(rateScale.ticks(4))
+                    .transition()
+                    .duration(2000)
+                    .attr({
+                        "y1": function(d) { return rateScale(d); },
+                        "y2": function(d) { return rateScale(d); }
+                    });
+
+                d3.select('.incomeaxis')
+                    .transition()
+                    .duration(2000)
+                    .call(incomeAxis);
+
+                d3.select('.owedaxis')
+                    .transition()
+                    .duration(2000)
+                    .call(owedAxis);
+
+                d3.select('.rateaxis')
+                    .transition()
+                    .duration(2000)
+                    .call(rateAxis);
 
                 d3.select('#tax')
                     .transition()
