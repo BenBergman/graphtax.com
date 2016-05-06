@@ -125,6 +125,10 @@ app.directive('taxChart', function() {
             });
 
             scope.render = function(data) {
+                var tempTax = lineGenTax(scope.data);
+                var tempEff = lineGenEff(scope.data);
+                var tempMarg = lineGenMarg(scope.data);
+
                 incomeScale
                     .domain([0, d3.max(scope.data, function(d) { return d["Income"]; })]);
                 owedScale
@@ -132,9 +136,13 @@ app.directive('taxChart', function() {
                 rateScale
                     .domain([0, d3.max(scope.data, function(d) { return d["Marginal Rate"]; })]);
 
+                var transition_time_one = 2000;
+                var transition_time_two = 2000;
+
                 svg.selectAll("line.horizontalGrid").data(rateScale.ticks(4))
                     .transition()
-                    .duration(2000)
+                    .delay(transition_time_one)
+                    .duration(transition_time_two)
                     .attr({
                         "y1": function(d) { return rateScale(d); },
                         "y2": function(d) { return rateScale(d); }
@@ -142,30 +150,50 @@ app.directive('taxChart', function() {
 
                 d3.select('.incomeaxis')
                     .transition()
-                    .duration(2000)
+                    .delay(transition_time_one)
+                    .duration(transition_time_two)
                     .call(incomeAxis);
 
                 d3.select('.owedaxis')
                     .transition()
-                    .duration(2000)
+                    .delay(transition_time_one)
+                    .duration(transition_time_two)
                     .call(owedAxis);
 
                 d3.select('.rateaxis')
                     .transition()
-                    .duration(2000)
+                    .delay(transition_time_one)
+                    .duration(transition_time_two)
                     .call(rateAxis);
 
                 d3.select('#tax')
                     .transition()
-                    .duration(2000)
+                    .duration(transition_time_one)
+                    .attr('d', tempTax);
+                d3.select('#tax')
+                    .transition()
+                    .delay(transition_time_one)
+                    .duration(transition_time_two)
                     .attr('d', lineGenTax(scope.data));
+
                 d3.select('#effective')
                     .transition()
-                    .duration(2000)
+                    .duration(transition_time_one)
+                    .attr('d', tempEff);
+                d3.select('#effective')
+                    .transition()
+                    .delay(transition_time_one)
+                    .duration(transition_time_two)
                     .attr('d', lineGenEff(scope.data));
+
                 d3.select('#marginal')
                     .transition()
-                    .duration(2000)
+                    .duration(transition_time_one)
+                    .attr('d', tempMarg);
+                d3.select('#marginal')
+                    .transition()
+                    .delay(transition_time_one)
+                    .duration(transition_time_two)
                     .attr('d', lineGenMarg(scope.data));
             };
         }
