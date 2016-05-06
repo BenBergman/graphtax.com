@@ -1,4 +1,9 @@
 app.controller("MainController", ["$scope", function($scope) {
+    $scope.min = 0;
+    $scope.max = 100;
+    $scope.sliders = {
+        "sliderValue": 20
+    };
     $scope.currentProvince = "Manitoba";
     $scope.provinces = [
         "Alberta",
