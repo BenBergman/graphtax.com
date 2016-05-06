@@ -132,19 +132,6 @@ app.directive('taxChart', function() {
                 rateScale
                     .domain([0, d3.max(scope.data, function(d) { return d["Marginal Rate"]; })]);
 
-                var lineGenTax = d3.svg.line()
-                    .x(function(d) { return incomeScale(d.Income); })
-                    .y(function(d) { return owedScale(d["Tax"]); })
-                    .interpolate("basis");
-                var lineGenEff = d3.svg.line()
-                    .x(function(d) { return incomeScale(d.Income); })
-                    .y(function(d) { return rateScale(d["Effective Rate"]); })
-                    .interpolate("basis");
-                var lineGenMarg = d3.svg.line()
-                    .x(function(d) { return incomeScale(d.Income); })
-                    .y(function(d) { return rateScale(d["Marginal Rate"]); })
-                    .interpolate("basis");
-
                 svg.selectAll("line.horizontalGrid").data(rateScale.ticks(4))
                     .transition()
                     .duration(2000)
