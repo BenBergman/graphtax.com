@@ -1,9 +1,11 @@
-module.exports = {
-    add_brackets: add_brackets,
-    subtract_brackets: subtract_brackets,
-    taxes_owed: taxes_owed,
-    marginal_rate: marginal_rate,
-    effective_rate: effective_rate,
+if (typeof module != "undefined") {
+    module.exports = {
+        add_brackets: add_brackets,
+        subtract_brackets: subtract_brackets,
+        taxes_owed: taxes_owed,
+        marginal_rate: marginal_rate,
+        effective_rate: effective_rate,
+    };
 }
 
 
