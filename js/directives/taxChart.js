@@ -86,15 +86,18 @@ app.directive('taxChart', ['$window', function($window) {
                 });
 
             svg.append("svg:g")
-                .attr("class", "x axis incomeaxis")
+                .attr("id", "incomeaxis")
+                .attr("class", "x axis")
                 .attr("transform", "translate(0," + (height - margins.bottom) + ")")
                 .call(incomeAxis);
             svg.append("svg:g")
-                .attr("class", "y axis owedaxis")
+                .attr("id", "owedaxis")
+                .attr("class", "y axis")
                 .attr("transform", "translate(" + (width - margins.right) + ",0)")
                 .call(owedAxis);
             svg.append("svg:g")
-                .attr("class", "y axis rateaxis")
+                .attr("id", "rateaxis")
+                .attr("class", "y axis")
                 .attr("transform", "translate(" + (margins.left) + ",0)")
                 .call(rateAxis);
 
@@ -144,13 +147,13 @@ app.directive('taxChart', ['$window', function($window) {
                 rateScale
                     .range([height - margins.top, margins.bottom]);
 
-                d3.select('.incomeaxis')
+                d3.select('#incomeaxis')
                     .attr("transform", "translate(0," + (height - margins.bottom) + ")")
                     .call(incomeAxis);
-                d3.select('.owedaxis')
+                d3.select('#owedaxis')
                     .attr("transform", "translate(" + (width - margins.right) + ",0)")
                     .call(owedAxis);
-                d3.select('.rateaxis')
+                d3.select('#rateaxis')
                     .attr("transform", "translate(" + (margins.left) + ",0)")
                     .call(rateAxis);
 
@@ -192,19 +195,19 @@ app.directive('taxChart', ['$window', function($window) {
                         "y2": function(d) { return rateScale(d); }
                     });
 
-                d3.select('.incomeaxis')
+                d3.select('#incomeaxis')
                     .transition()
                     .delay(transition_time_one)
                     .duration(transition_time_two)
                     .call(incomeAxis);
 
-                d3.select('.owedaxis')
+                d3.select('#owedaxis')
                     .transition()
                     .delay(transition_time_one)
                     .duration(transition_time_two)
                     .call(owedAxis);
 
-                d3.select('.rateaxis')
+                d3.select('#rateaxis')
                     .transition()
                     .delay(transition_time_one)
                     .duration(transition_time_two)
