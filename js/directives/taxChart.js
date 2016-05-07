@@ -1,9 +1,9 @@
-app.directive('taxChart', function() {
+app.directive('taxChart', ['$window', function($window) {
     return {
-        restrict: 'E',
+        restrict: 'EA',
         link: function(scope, element, attrs) {
-            var width = 1000;
-            var height = 500;
+            var width = element[0].clientWidth;
+            var height = width/2;
             var margins = {
                 top: 20,
                 right: 50,
@@ -124,6 +124,47 @@ app.directive('taxChart', function() {
                 return scope.render(newData);
             });
 
+
+            scope.resize = function() {
+                width = element[0].clientWidth;
+                height = width/2;
+
+                svg.style({
+                    "width": width,
+                    "height": height,
+                });
+
+                incomeScale
+                    .range([margins.left, width - margins.right]);
+                owedScale
+                    .range([height - margins.top, margins.bottom]);
+                rateScale
+                    .range([height - margins.top, margins.bottom]);
+
+                d3.select('.incomeaxis')
+                    .attr("transform", "translate(0," + (height - margins.bottom) + ")")
+                    .call(incomeAxis);
+                d3.select('.owedaxis')
+                    .attr("transform", "translate(" + (width - margins.right) + ",0)")
+                    .call(owedAxis);
+                d3.select('.rateaxis')
+                    .attr("transform", "translate(" + (margins.left) + ",0)")
+                    .call(rateAxis);
+
+                d3.select('#tax')
+                    .attr('d', lineGenTax(scope.data));
+                d3.select('#effective')
+                    .attr('d', lineGenEff(scope.data));
+                d3.select('#marginal')
+                    .attr('d', lineGenMarg(scope.data));
+            };
+
+
+            angular.element($window).on('resize', function() {
+                scope.resize();
+            });
+
+
             scope.render = function(data) {
                 var tempTax = lineGenTax(scope.data);
                 var tempEff = lineGenEff(scope.data);
@@ -132,7 +173,7 @@ app.directive('taxChart', function() {
                 incomeScale
                     .domain([0, d3.max(scope.data, function(d) { return d["Income"]; })]);
                 owedScale
-                    .domain([0, d3.max(scope.data, function(d) { return d["Tax"]; })]),
+                    .domain([0, d3.max(scope.data, function(d) { return d["Tax"]; })]);
                 rateScale
                     .domain([0, d3.max(scope.data, function(d) { return d["Marginal Rate"]; })]);
 
@@ -197,5 +238,5 @@ app.directive('taxChart', function() {
                     .attr('d', lineGenMarg(scope.data));
             };
         }
-    }
-})
+    };
+}]);
