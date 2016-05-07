@@ -46,12 +46,15 @@ app.directive('taxChart', ['$window', function($window) {
 
             var incomeAxis = d3.svg.axis()
                     .scale(incomeScale)
+                    .tickFormat(d3.format("$s"))
                     .orient("bottom"),
                 owedAxis = d3.svg.axis()
                     .scale(owedScale)
+                    .tickFormat(d3.format("$s"))
                     .orient("right"),
                 rateAxis = d3.svg.axis()
                     .scale(rateScale)
+                    .tickFormat(d3.format("%"))
                     .orient("left");
 
             var lineGenTax = d3.svg.line()
