@@ -6,9 +6,9 @@ app.directive('taxChart', ['$window', function($window) {
             var height = width/2;
             var margins = {
                 top: 20,
-                right: 50,
-                bottom: 20,
-                left: 50
+                right: 120,
+                bottom: 70,
+                left: 100
             };
 
             var svg = d3.select(element[0])
@@ -39,10 +39,10 @@ app.directive('taxChart', ['$window', function($window) {
                 .range([margins.left, width - margins.right]);
             var owedScale = d3.scale.linear()
                 .domain([0, d3.max(scope.data, function(d) { return d["Tax"]; })])
-                .range([height - margins.top, margins.bottom]);
+                .range([height - margins.bottom, margins.top]);
             var rateScale = d3.scale.linear()
                 .domain([0, d3.max(scope.data, function(d) { return d["Marginal Rate"]; })])
-                .range([height - margins.top, margins.bottom]);
+                .range([height - margins.bottom, margins.top]);
 
             var incomeAxis = d3.svg.axis()
                     .scale(incomeScale)
@@ -75,7 +75,7 @@ app.directive('taxChart', ['$window', function($window) {
                 .append("line")
                 .attr({
                     "class": "horizontalGrid",
-                    "x1": margins.right,
+                    "x1": margins.left,
                     "x2": width - margins.right,
                     "y1": function(d) { return rateScale(d); },
                     "y2": function(d) { return rateScale(d); },
@@ -100,6 +100,25 @@ app.directive('taxChart', ['$window', function($window) {
                 .attr("class", "y axis")
                 .attr("transform", "translate(" + (margins.left) + ",0)")
                 .call(rateAxis);
+
+            svg.append("text")
+                .attr("id", "incomelabel")
+                .attr("class", "label")
+                .attr("text-anchor", "middle")
+                .attr("transform", "translate(" + (width/2) + "," + (height - (margins.bottom/3)) + ")")
+                .text("Total Taxes Due");
+            svg.append("text")
+                .attr("id", "owedlabel")
+                .attr("class", "label")
+                .attr("text-anchor", "middle")
+                .attr("transform", "translate(" + (width - (margins.left/2)) + "," + (height/2) + ")rotate(-90)")
+                .text("Total Taxes Due");
+            svg.append("text")
+                .attr("id", "ratelabel")
+                .attr("class", "label")
+                .attr("text-anchor", "middle")
+                .attr("transform", "translate(" + (margins.left/2) + "," + (height/2) + ")rotate(-90)")
+                .text("Rate");
 
             var color = d3.scale.category10()
                 .domain(["Tax", "Effective Rate", "Marginal Rate"]);
@@ -143,9 +162,9 @@ app.directive('taxChart', ['$window', function($window) {
                 incomeScale
                     .range([margins.left, width - margins.right]);
                 owedScale
-                    .range([height - margins.top, margins.bottom]);
+                    .range([height - margins.bottom, margins.top]);
                 rateScale
-                    .range([height - margins.top, margins.bottom]);
+                    .range([height - margins.bottom, margins.top]);
 
                 d3.select('#incomeaxis')
                     .attr("transform", "translate(0," + (height - margins.bottom) + ")")
@@ -156,6 +175,13 @@ app.directive('taxChart', ['$window', function($window) {
                 d3.select('#rateaxis')
                     .attr("transform", "translate(" + (margins.left) + ",0)")
                     .call(rateAxis);
+
+                d3.select('#incomelabel')
+                    .attr("transform", "translate(" + (width/2) + "," + (height - (margins.bottom/3)) + ")");
+                d3.select('#owedlabel')
+                    .attr("transform", "translate(" + (width - (margins.left/2)) + "," + (height/2) + ")rotate(-90)");
+                d3.select('#ratelabel')
+                    .attr("transform", "translate(" + (margins.left/2) + "," + (height/2) + ")rotate(-90)");
 
                 d3.select('#tax')
                     .attr('d', lineGenTax(scope.data));
