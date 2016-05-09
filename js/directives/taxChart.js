@@ -124,6 +124,28 @@ app.directive('taxChart', ['$window', function($window) {
                 .domain(["Tax", "Effective Rate", "Marginal Rate"]);
 
 
+            svg.on("click", function() {
+                var [x, y] = d3.mouse(this);
+                if (x > margins.left &&
+                    x < width - margins.right &&
+                    y > margins.top &&
+                    y < height - margins.bottom) {
+                    d3.select("#selectionline").remove();
+                    svg.append("line")
+                        .attr({
+                            "id": "selectionline",
+                            "class": "selectionline",
+                            "x1": x,
+                            "x2": x,
+                            "y1": margins.top,
+                            "y2": height - margins.bottom,
+                            "fill": "none",
+                            "shape-rendering": "crispEdges",
+                            "stroke": "grey",
+                            "stroke-width": "1px"
+                        });
+                }
+            });
 
 
             svg.append('svg:path')
@@ -143,7 +165,10 @@ app.directive('taxChart', ['$window', function($window) {
                 .attr('d', lineGenMarg(scope.data))
                 .attr('stroke', color("Marginal Rate"))
                 .attr('stroke-width', 2)
-                .attr('fill', 'none');
+                .attr('fill', 'none')
+                .on("mouseover", function() {
+                    console.log("foobar");
+                });
 
             scope.$watch('data', function(newData, oldData) {
                 return scope.render(newData);
