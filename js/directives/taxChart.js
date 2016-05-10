@@ -133,8 +133,8 @@ app.directive('taxChart', ['$window', function($window) {
                     x < width - margins.right &&
                     y > margins.top &&
                     y < height - margins.bottom) {
-                        if (!mouseOnGraph) {
-                            svg.append("line")
+                    if (!mouseOnGraph) {
+                        svg.append("line")
                             .attr({
                                 "id": "selectionline",
                                 "class": "selectionline",
@@ -143,22 +143,49 @@ app.directive('taxChart', ['$window', function($window) {
                                 "stroke": "grey",
                                 "stroke-width": "2px"
                             });
-                        }
-                        mouseOnGraph = true;
-                        var x0 = incomeScale.invert(x);
-                        var y0 = scope.data[Math.round(x0/100)]["Marginal Rate"];
-                        d3.select("#selectionline")
+                        svg.append("circle")
+                            .attr("id", "taxPoint")
+                            .attr("r", 4.5);
+                        svg.append("circle")
+                            .attr("id", "effectivePoint")
+                            .attr("r", 4.5);
+                        svg.append("circle")
+                            .attr("id", "marginalPoint")
+                            .attr("r", 4.5);
+                    }
+                    mouseOnGraph = true;
+                    var x0 = incomeScale.invert(x);
+                    var dataPoint = scope.data[Math.round(x0/100)];
+                    var y0 = dataPoint["Marginal Rate"];
+                    d3.select("#selectionline")
                         .attr({
                             "x1": x,
                             "x2": x,
                             "y1": rateScale(y0),
                             "y2": height - margins.bottom,
                         });
-                    } else {
-                        mouseOnGraph = false;
-                        d3.select("#selectionline").remove();
-                    }
-                    console.log(mouseOnGraph);
+                    d3.select("#taxPoint")
+                        .attr("fill", "white")
+                        .attr("stroke", color("Tax"))
+                        .attr("cx", x)
+                        .attr("cy", owedScale(dataPoint["Tax"]));
+                    d3.select("#effectivePoint")
+                        .attr("fill", "white")
+                        .attr("stroke", color("Effective Rate"))
+                        .attr("cx", x)
+                        .attr("cy", rateScale(dataPoint["Effective Rate"]));
+                    d3.select("#marginalPoint")
+                        .attr("fill", "white")
+                        .attr("stroke", color("Marginal Rate"))
+                        .attr("cx", x)
+                        .attr("cy", rateScale(dataPoint["Marginal Rate"]));
+                } else {
+                    mouseOnGraph = false;
+                    d3.select("#selectionline").remove();
+                    d3.select("#taxPoint").remove();
+                    d3.select("#effectivePoint").remove();
+                    d3.select("#marginalPoint").remove();
+                }
             });
 
 
