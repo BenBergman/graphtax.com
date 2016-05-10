@@ -4,6 +4,10 @@ app.controller("MainController", ["$scope", function($scope) {
     $scope.sliders = {
         "sliderValue": 20
     };
+    $scope.currentIncome = 0;
+    $scope.currentTax = 0;
+    $scope.currentEff = 0;
+    $scope.currentMarg = 0;
     $scope.currentProvince = "Manitoba";
     $scope.provinces = [
         "Alberta",

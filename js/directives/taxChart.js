@@ -154,31 +154,37 @@ app.directive('taxChart', ['$window', function($window) {
                             .attr("r", 4.5);
                     }
                     mouseOnGraph = true;
-                    var x0 = incomeScale.invert(x);
-                    var dataPoint = scope.data[Math.round(x0/100)];
-                    var y0 = dataPoint["Marginal Rate"];
+
+                    scope.currentIncome = incomeScale.invert(x);
+                    var dataPoint = scope.data[Math.round(scope.currentIncome/100)];
+                    scope.currentTax = dataPoint["Tax"];
+                    scope.currentEff = dataPoint["Effective Rate"];
+                    scope.currentMarg = dataPoint["Marginal Rate"];
+
+                    var y0 = d3.min([owedScale(scope.currentTax), rateScale(scope.currentEff), rateScale(scope.currentMarg)]);
                     d3.select("#selectionline")
                         .attr({
                             "x1": x,
                             "x2": x,
-                            "y1": rateScale(y0),
+                            "y1": y0,
                             "y2": height - margins.bottom,
                         });
+
                     d3.select("#taxPoint")
                         .attr("fill", "white")
                         .attr("stroke", color("Tax"))
                         .attr("cx", x)
-                        .attr("cy", owedScale(dataPoint["Tax"]));
+                        .attr("cy", owedScale(scope.currentTax));
                     d3.select("#effectivePoint")
                         .attr("fill", "white")
                         .attr("stroke", color("Effective Rate"))
                         .attr("cx", x)
-                        .attr("cy", rateScale(dataPoint["Effective Rate"]));
+                        .attr("cy", rateScale(scope.currentEff));
                     d3.select("#marginalPoint")
                         .attr("fill", "white")
                         .attr("stroke", color("Marginal Rate"))
                         .attr("cx", x)
-                        .attr("cy", rateScale(dataPoint["Marginal Rate"]));
+                        .attr("cy", rateScale(scope.currentMarg));
                 } else {
                     mouseOnGraph = false;
                     d3.select("#selectionline").remove();
@@ -186,6 +192,7 @@ app.directive('taxChart', ['$window', function($window) {
                     d3.select("#effectivePoint").remove();
                     d3.select("#marginalPoint").remove();
                 }
+                scope.$apply();
             });
 
 
