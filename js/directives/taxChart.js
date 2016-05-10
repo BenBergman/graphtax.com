@@ -123,26 +123,35 @@ app.directive('taxChart', ['$window', function($window) {
             var color = d3.scale.category10()
                 .domain(["Tax", "Effective Rate", "Marginal Rate"]);
 
+            svg.append("line")
+                .attr({
+                    "id": "selectionline",
+                    "class": "selectionline",
+                    "x1": margins.left,
+                    "x2": margins.left,
+                    "y1": margins.top,
+                    "y2": height - margins.bottom,
+                    "fill": "none",
+                    "shape-rendering": "crispEdges",
+                    "stroke": "grey",
+                    "stroke-width": "2px"
+                });
 
-            svg.on("click", function() {
+
+            svg.on("mousemove", function() {
                 var [x, y] = d3.mouse(this);
                 if (x > margins.left &&
                     x < width - margins.right &&
                     y > margins.top &&
                     y < height - margins.bottom) {
-                    d3.select("#selectionline").remove();
-                    svg.append("line")
+                    var x0 = incomeScale.invert(x);
+                    var y0 = scope.data[Math.round(x0/100)]["Marginal Rate"];
+                    d3.select("#selectionline")
                         .attr({
-                            "id": "selectionline",
-                            "class": "selectionline",
                             "x1": x,
                             "x2": x,
-                            "y1": margins.top,
+                            "y1": rateScale(y0),
                             "y2": height - margins.bottom,
-                            "fill": "none",
-                            "shape-rendering": "crispEdges",
-                            "stroke": "grey",
-                            "stroke-width": "1px"
                         });
                 }
             });
