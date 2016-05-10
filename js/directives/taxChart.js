@@ -106,7 +106,7 @@ app.directive('taxChart', ['$window', function($window) {
                 .attr("class", "label")
                 .attr("text-anchor", "middle")
                 .attr("transform", "translate(" + (width/2) + "," + (height - (margins.bottom/3)) + ")")
-                .text("Total Taxes Due");
+                .text("Total Income");
             svg.append("text")
                 .attr("id", "owedlabel")
                 .attr("class", "label")
