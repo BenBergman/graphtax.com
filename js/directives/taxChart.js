@@ -123,20 +123,9 @@ app.directive('taxChart', ['$window', function($window) {
             var color = d3.scale.category10()
                 .domain(["Tax", "Effective Rate", "Marginal Rate"]);
 
-            svg.append("line")
-                .attr({
-                    "id": "selectionline",
-                    "class": "selectionline",
-                    "x1": margins.left,
-                    "x2": margins.left,
-                    "y1": margins.top,
-                    "y2": height - margins.bottom,
-                    "fill": "none",
-                    "shape-rendering": "crispEdges",
-                    "stroke": "grey",
-                    "stroke-width": "2px"
-                });
 
+
+            var mouseOnGraph = false;
 
             svg.on("mousemove", function() {
                 var [x, y] = d3.mouse(this);
@@ -144,16 +133,32 @@ app.directive('taxChart', ['$window', function($window) {
                     x < width - margins.right &&
                     y > margins.top &&
                     y < height - margins.bottom) {
-                    var x0 = incomeScale.invert(x);
-                    var y0 = scope.data[Math.round(x0/100)]["Marginal Rate"];
-                    d3.select("#selectionline")
+                        if (!mouseOnGraph) {
+                            svg.append("line")
+                            .attr({
+                                "id": "selectionline",
+                                "class": "selectionline",
+                                "fill": "none",
+                                "shape-rendering": "crispEdges",
+                                "stroke": "grey",
+                                "stroke-width": "2px"
+                            });
+                        }
+                        mouseOnGraph = true;
+                        var x0 = incomeScale.invert(x);
+                        var y0 = scope.data[Math.round(x0/100)]["Marginal Rate"];
+                        d3.select("#selectionline")
                         .attr({
                             "x1": x,
                             "x2": x,
                             "y1": rateScale(y0),
                             "y2": height - margins.bottom,
                         });
-                }
+                    } else {
+                        mouseOnGraph = false;
+                        d3.select("#selectionline").remove();
+                    }
+                    console.log(mouseOnGraph);
             });
 
 
