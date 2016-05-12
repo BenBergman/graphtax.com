@@ -70,21 +70,6 @@ app.directive('taxChart', ['$window', function($window) {
                 .y(function(d) { return rateScale(d["Marginal Rate"]); })
                 .interpolate("basis");
 
-
-            svg.selectAll("line.horizontalGrid").data(rateScale.ticks(4)).enter()
-                .append("line")
-                .attr({
-                    "class": "horizontalGrid",
-                    "x1": margins.left,
-                    "x2": width - margins.right,
-                    "y1": function(d) { return rateScale(d); },
-                    "y2": function(d) { return rateScale(d); },
-                    "fill": "none",
-                    "shape-rendering": "crispEdges",
-                    "stroke": "lightgrey",
-                    "stroke-width": "1px"
-                });
-
             svg.append("svg:g")
                 .attr("id", "incomeaxis")
                 .attr("class", "x axis")
@@ -100,6 +85,28 @@ app.directive('taxChart', ['$window', function($window) {
                 .attr("class", "y axis")
                 .attr("transform", "translate(" + (margins.left) + ",0)")
                 .call(rateAxis);
+
+            d3.selectAll("g.x g.tick")
+                .append("line")
+                .classed("grid-line", true)
+                .attr("fill", "none")
+                .attr("stroke", "lightgrey")
+                .attr("stroke-width", "1px")
+                .attr("x1", 0)
+                .attr("y1", 0)
+                .attr("x2", 0)
+                .attr("y2", margins.top + margins.bottom - height);
+
+            d3.selectAll("#rateaxis g.tick")
+                .append("line")
+                .classed("grid-line", true)
+                .attr("fill", "none")
+                .attr("stroke", "lightgrey")
+                .attr("stroke-width", "1px")
+                .attr("x1", 0)
+                .attr("y1", 0)
+                .attr("x2", width - margins.left - margins.right)
+                .attr("y2", 0);
 
             svg.append("text")
                 .attr("id", "incomelabel")
@@ -249,6 +256,11 @@ app.directive('taxChart', ['$window', function($window) {
                     .attr("transform", "translate(" + (margins.left) + ",0)")
                     .call(rateAxis);
 
+                d3.selectAll('g.x g.tick line.grid-line')
+                    .attr("y2", margins.top + margins.bottom - height);
+                d3.selectAll("#rateaxis g.tick line.grid-line")
+                    .attr("x2", width - margins.left - margins.right);
+
                 d3.select('#incomelabel')
                     .attr("transform", "translate(" + (width/2) + "," + (height - (margins.bottom/3)) + ")");
                 d3.select('#owedlabel')
@@ -284,15 +296,6 @@ app.directive('taxChart', ['$window', function($window) {
 
                 var transition_time_one = 2000;
                 var transition_time_two = 2000;
-
-                svg.selectAll("line.horizontalGrid").data(rateScale.ticks(4))
-                    .transition()
-                    .delay(transition_time_one)
-                    .duration(transition_time_two)
-                    .attr({
-                        "y1": function(d) { return rateScale(d); },
-                        "y2": function(d) { return rateScale(d); }
-                    });
 
                 d3.select('#incomeaxis')
                     .transition()
