@@ -19,20 +19,8 @@ app.directive('taxChart', ['$window', function($window) {
                     "height": height
                 });
 
-            var brackets = add_brackets(scope.rawBrackets[scope.currentProvince].income, scope.rawBrackets.Federal.income);
-            brackets = subtract_brackets(brackets, scope.rawBrackets[scope.currentProvince].personalAmount);
-            brackets = subtract_brackets(brackets, scope.rawBrackets.Federal.personalAmount);
+            create_initial_data_set();
 
-            scope.data = [];
-
-            for (var i = 0; i <= 250000; i += 100) {
-                scope.data.push({
-                    "Income": i,
-                    "Tax": taxes_owed(i, brackets),
-                    "Effective Rate": effective_rate(i, brackets),
-                    "Marginal Rate": marginal_rate(i, brackets)
-                });
-            }
 
             var incomeScale = d3.scale.linear()
                 .domain([0, d3.max(scope.data, function(d) { return d["Income"]; })])
@@ -70,71 +58,101 @@ app.directive('taxChart', ['$window', function($window) {
                 .y(function(d) { return rateScale(d["Marginal Rate"]); })
                 .interpolate("basis");
 
-            svg.append("svg:g")
-                .attr("id", "incomeaxis")
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + (height - margins.bottom) + ")")
-                .call(incomeAxis);
-            svg.append("svg:g")
-                .attr("id", "owedaxis")
-                .attr("class", "y axis")
-                .attr("transform", "translate(" + (width - margins.right) + ",0)")
-                .call(owedAxis);
-            svg.append("svg:g")
-                .attr("id", "rateaxis")
-                .attr("class", "y axis")
-                .attr("transform", "translate(" + (margins.left) + ",0)")
-                .call(rateAxis);
-
-            d3.selectAll("g.x g.tick")
-                .append("line")
-                .classed("grid-line", true)
-                .attr("fill", "none")
-                .attr("stroke", "lightgrey")
-                .attr("stroke-width", "1px")
-                .attr("x1", 0)
-                .attr("y1", 0)
-                .attr("x2", 0)
-                .attr("y2", margins.top + margins.bottom - height);
-
-            d3.selectAll("#rateaxis g.tick")
-                .append("line")
-                .classed("grid-line", true)
-                .attr("fill", "none")
-                .attr("stroke", "lightgrey")
-                .attr("stroke-width", "1px")
-                .attr("x1", 0)
-                .attr("y1", 0)
-                .attr("x2", width - margins.left - margins.right)
-                .attr("y2", 0);
-
-            svg.append("text")
-                .attr("id", "incomelabel")
-                .attr("class", "label")
-                .attr("text-anchor", "middle")
-                .attr("transform", "translate(" + (width/2) + "," + (height - (margins.bottom/3)) + ")")
-                .text("Total Income");
-            svg.append("text")
-                .attr("id", "owedlabel")
-                .attr("class", "label")
-                .attr("text-anchor", "middle")
-                .attr("transform", "translate(" + (width - (margins.left/2)) + "," + (height/2) + ")rotate(-90)")
-                .text("Total Taxes Due");
-            svg.append("text")
-                .attr("id", "ratelabel")
-                .attr("class", "label")
-                .attr("text-anchor", "middle")
-                .attr("transform", "translate(" + (margins.left/2) + "," + (height/2) + ")rotate(-90)")
-                .text("Rate");
-
             var color = d3.scale.category10()
                 .domain(["Tax", "Effective Rate", "Marginal Rate"]);
 
 
+            add_axis();
+
+            draw_data();
 
             var mouseOnGraph = false;
+            svg.on("mousemove", update_cursor_line);
 
-            svg.on("mousemove", function() {
+            scope.$watch('data', render);
+
+            angular.element($window).on('resize', resize);
+
+
+            function create_initial_data_set() {
+                var brackets = add_brackets(scope.rawBrackets[scope.currentProvince].income, scope.rawBrackets.Federal.income);
+                brackets = subtract_brackets(brackets, scope.rawBrackets[scope.currentProvince].personalAmount);
+                brackets = subtract_brackets(brackets, scope.rawBrackets.Federal.personalAmount);
+
+                scope.data = [];
+
+                for (var i = 0; i <= 250000; i += 100) {
+                    scope.data.push({
+                        "Income": i,
+                        "Tax": taxes_owed(i, brackets),
+                        "Effective Rate": effective_rate(i, brackets),
+                        "Marginal Rate": marginal_rate(i, brackets)
+                    });
+                }
+            }
+
+
+            function add_axis() {
+                svg.append("svg:g")
+                    .attr("id", "incomeaxis")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + (height - margins.bottom) + ")")
+                    .call(incomeAxis);
+                svg.append("svg:g")
+                    .attr("id", "owedaxis")
+                    .attr("class", "y axis")
+                    .attr("transform", "translate(" + (width - margins.right) + ",0)")
+                    .call(owedAxis);
+                svg.append("svg:g")
+                    .attr("id", "rateaxis")
+                    .attr("class", "y axis")
+                    .attr("transform", "translate(" + (margins.left) + ",0)")
+                    .call(rateAxis);
+
+                d3.selectAll("g.x g.tick")
+                    .append("line")
+                    .classed("grid-line", true)
+                    .attr("fill", "none")
+                    .attr("stroke", "lightgrey")
+                    .attr("stroke-width", "1px")
+                    .attr("x1", 0)
+                    .attr("y1", 0)
+                    .attr("x2", 0)
+                    .attr("y2", margins.top + margins.bottom - height);
+
+                d3.selectAll("#rateaxis g.tick")
+                    .append("line")
+                    .classed("grid-line", true)
+                    .attr("fill", "none")
+                    .attr("stroke", "lightgrey")
+                    .attr("stroke-width", "1px")
+                    .attr("x1", 0)
+                    .attr("y1", 0)
+                    .attr("x2", width - margins.left - margins.right)
+                    .attr("y2", 0);
+
+                svg.append("text")
+                    .attr("id", "incomelabel")
+                    .attr("class", "label")
+                    .attr("text-anchor", "middle")
+                    .attr("transform", "translate(" + (width/2) + "," + (height - (margins.bottom/3)) + ")")
+                    .text("Total Income");
+                svg.append("text")
+                    .attr("id", "owedlabel")
+                    .attr("class", "label")
+                    .attr("text-anchor", "middle")
+                    .attr("transform", "translate(" + (width - (margins.left/2)) + "," + (height/2) + ")rotate(-90)")
+                    .text("Total Taxes Due");
+                svg.append("text")
+                    .attr("id", "ratelabel")
+                    .attr("class", "label")
+                    .attr("text-anchor", "middle")
+                    .attr("transform", "translate(" + (margins.left/2) + "," + (height/2) + ")rotate(-90)")
+                    .text("Rate");
+            }
+
+
+            function update_cursor_line() {
                 var [x, y] = d3.mouse(this);
                 if (x > margins.left &&
                     x < width - margins.right &&
@@ -200,37 +218,35 @@ app.directive('taxChart', ['$window', function($window) {
                     d3.select("#marginalPoint").remove();
                 }
                 scope.$apply();
-            });
+            };
 
 
-            svg.append('svg:path')
-                .attr('id', 'tax')
-                .attr('d', lineGenTax(scope.data))
-                .attr('stroke', color("Tax"))
-                .attr('stroke-width', 2)
-                .attr('fill', 'none');
-            svg.append('svg:path')
-                .attr('id', 'effective')
-                .attr('d', lineGenEff(scope.data))
-                .attr('stroke', color("Effective Rate"))
-                .attr('stroke-width', 2)
-                .attr('fill', 'none');
-            svg.append('svg:path')
-                .attr('id', 'marginal')
-                .attr('d', lineGenMarg(scope.data))
-                .attr('stroke', color("Marginal Rate"))
-                .attr('stroke-width', 2)
-                .attr('fill', 'none')
-                .on("mouseover", function() {
-                    console.log("foobar");
-                });
-
-            scope.$watch('data', function(newData, oldData) {
-                return scope.render(newData);
-            });
+            function draw_data() {
+                svg.append('svg:path')
+                    .attr('id', 'tax')
+                    .attr('d', lineGenTax(scope.data))
+                    .attr('stroke', color("Tax"))
+                    .attr('stroke-width', 2)
+                    .attr('fill', 'none');
+                svg.append('svg:path')
+                    .attr('id', 'effective')
+                    .attr('d', lineGenEff(scope.data))
+                    .attr('stroke', color("Effective Rate"))
+                    .attr('stroke-width', 2)
+                    .attr('fill', 'none');
+                svg.append('svg:path')
+                    .attr('id', 'marginal')
+                    .attr('d', lineGenMarg(scope.data))
+                    .attr('stroke', color("Marginal Rate"))
+                    .attr('stroke-width', 2)
+                    .attr('fill', 'none')
+                    .on("mouseover", function() {
+                        console.log("foobar");
+                    });
+            }
 
 
-            scope.resize = function() {
+            function resize() {
                 width = element[0].clientWidth;
                 height = width/2;
 
@@ -277,12 +293,7 @@ app.directive('taxChart', ['$window', function($window) {
             };
 
 
-            angular.element($window).on('resize', function() {
-                scope.resize();
-            });
-
-
-            scope.render = function(data) {
+            function render(data) {
                 var tempTax = lineGenTax(scope.data);
                 var tempEff = lineGenEff(scope.data);
                 var tempMarg = lineGenMarg(scope.data);
