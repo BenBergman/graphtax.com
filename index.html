@@ -60,8 +60,24 @@
 
             <uib-accordion>
                 <uib-accordion-group heading="How do tax credits and deductions affect my taxes?" is-open=true template-url="group-template.html">
-                    Credits: <slider ng-model="sliders.sliderValue" min="min" max="max"></slider>
-                    Deductions: <slider ng-model="sliders.sliderValue" min="min" max="max"></slider>
+                    Credits (Refundable): <slider
+                        ng-model="sliders.creditRefundable"
+                        min="min"
+                        max="max"
+                        on-slide="changeCreditsAndDeductions()"
+                        on-stop-slide="changeCreditsAndDeductions()"></slider>
+                    Credits (Non-refundable): <slider
+                        ng-model="sliders.creditNonRefundable"
+                        min="min"
+                        max="max"
+                        on-slide="changeCreditsAndDeductions()"
+                        on-stop-slide="changeCreditsAndDeductions()"></slider>
+                    Deductions: <slider
+                        ng-model="sliders.deduction"
+                        min="min"
+                        max="max"
+                        on-slide="changeCreditsAndDeductions()"
+                        on-stop-slide="changeCreditsAndDeductions()"></slider>
                     <p>The body of the uib-accordion group grows to fit the contents</p>
                     <button type="button" class="btn btn-default btn-sm" ng-click="addItem()">Add Item</button>
                 </uib-accordion-group>

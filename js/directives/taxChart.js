@@ -69,8 +69,6 @@ app.directive('taxChart', ['$window', function($window) {
             var mouseOnGraph = false;
             svg.on("mousemove", update_cursor_line);
 
-            scope.$watch('data', render);
-
             angular.element($window).on('resize', resize);
 
 
@@ -293,7 +291,7 @@ app.directive('taxChart', ['$window', function($window) {
             };
 
 
-            function render(data) {
+            scope.render = function() {
                 var tempTax = lineGenTax(scope.data);
                 var tempEff = lineGenEff(scope.data);
                 var tempMarg = lineGenMarg(scope.data);
@@ -355,6 +353,21 @@ app.directive('taxChart', ['$window', function($window) {
                     .delay(transition_time_one)
                     .duration(transition_time_two)
                     .attr('d', lineGenMarg(scope.data));
+            };
+
+            scope.renderCredits = function() {
+                var tempTax = lineGenTax(scope.data);
+                var tempEff = lineGenEff(scope.data);
+                var tempMarg = lineGenMarg(scope.data);
+
+                d3.select('#tax')
+                    .attr('d', tempTax);
+
+                d3.select('#effective')
+                    .attr('d', tempEff);
+
+                d3.select('#marginal')
+                    .attr('d', tempMarg);
             };
         }
     };
