@@ -43,10 +43,10 @@
     <div class="container">
         <div class="main" ng-controller="MainController">
             <div tax-chart></div>
-            <h3>Total Income : {{ currentIncome|currency:$:0 }}</h3>
-            <h3><font color="green">Marginal Tax Rate : {{ currentMarg|percentage:0 }}</font></h3>
-            <h3><font color="blue">Total Taxes Due : {{ currentTax|currency:$:0 }}</font></h3>
-            <h3><font color="orange">Effective Tax Rate : {{ currentEff|percentage:0 }}</font></h3>
+            <p>Total Income : {{ currentIncome|currency:$:0 }}</p>
+            <p uib-popover="The amount of tax you owe on the next dollar that you earn. For example, if you earned $50,000 and are in the 33% tax bracket and you earn an additional $100, you will pay 33% tax on that $100. This rate does not necessarily apply to the previous $50,000." popover-trigger="mouseenter"><font color="green">Marginal Tax Rate<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup> : {{ currentMarg|percentage:0 }}</font></p>
+            <p><font color="blue">Total Taxes Due : {{ currentTax|currency:$:0 }}</font></p>
+            <p uib-popover="The average tax rate you pay for each dollar you earn." popover-trigger="mouseenter"><font color="orange">Effective Tax Rate<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup> : {{ currentEff|percentage:0 }}</font></p>
             <div class="btn-group" uib-dropdown is-open="status.isopen">
                 <button id="single-button" type="button" class="btn btn-primary" uib-dropdown-toggle ng-disabled="disabled">
                     Current Province: {{ currentProvince }} <span class="caret"></span>
@@ -60,24 +60,27 @@
 
             <uib-accordion>
                 <uib-accordion-group heading="How do tax credits and deductions affect my taxes?" is-open=true template-url="group-template.html">
-                    Credits (Refundable): <slider
+                    <p uib-popover="Refundable tax credits are very similar to the government writing you a cheque at the end of the year, regardless of what you earned or how much you owe on your taxes. If your owe $0 or $50,000 in taxes, you will receive the same benefit." popover-trigger="mouseenter">Credits (Refundable)<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>: <slider
                         ng-model="sliders.creditRefundable"
+                        formatter="sliderFormat(value)"
                         min="min"
                         max="max"
                         on-slide="changeCreditsAndDeductions()"
-                        on-stop-slide="changeCreditsAndDeductions()"></slider>
-                    Credits (Non-refundable): <slider
+                        on-stop-slide="changeCreditsAndDeductions()"></slider></p>
+                    <p uib-popover="Non-refundable tax credits can only cancel out other taxes that you owe. You will only receive a benefit if you otherwise owe money for taxes." popover-trigger="mouseenter">Credits (Non-refundable)<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>: <slider
                         ng-model="sliders.creditNonRefundable"
+                        formatter="sliderFormat(value)"
                         min="min"
                         max="max"
                         on-slide="changeCreditsAndDeductions()"
-                        on-stop-slide="changeCreditsAndDeductions()"></slider>
-                    Deductions: <slider
+                        on-stop-slide="changeCreditsAndDeductions()"></slider></p>
+                    <p uib-popover="Tax deductions effectively reduce the amount of your income for the year that gets taxed." popover-trigger="mouseenter">Deductions<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>: <slider
                         ng-model="sliders.deduction"
+                        formatter="sliderFormat(value)"
                         min="min"
                         max="max"
                         on-slide="changeCreditsAndDeductions()"
-                        on-stop-slide="changeCreditsAndDeductions()"></slider>
+                        on-stop-slide="changeCreditsAndDeductions()"></slider></p>
                     <p>The body of the uib-accordion group grows to fit the contents</p>
                     <button type="button" class="btn btn-default btn-sm" ng-click="addItem()">Add Item</button>
                 </uib-accordion-group>

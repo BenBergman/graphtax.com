@@ -1,4 +1,4 @@
-app.controller("MainController", ["$scope", function($scope) {
+app.controller("MainController", ["$scope", "$filter", function($scope, $filter) {
     $scope.min = 0;
     $scope.max = 100000;
     $scope.sliders = {
@@ -242,4 +242,7 @@ app.controller("MainController", ["$scope", function($scope) {
 
         $scope.renderCredits();
     };
+    $scope.sliderFormat = function(value) {
+        return $filter('currency')(value, '$', 0);
+    }
 }]);
