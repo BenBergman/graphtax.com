@@ -79,13 +79,29 @@ app.directive('taxChart', ['$window', function($window) {
                 .y0(function(d) { return owedScale(d.y0); })
                 .y1(function(d) { return owedScale(d.y0 + d.y); });
 
+            var rateArea = d3.svg.area()
+                .interpolate("cardinal")
+                .x(function(d) { return incomeScale(d.x); })
+                .y0(function(d) { return rateScale(d.y0); })
+                .y1(function(d) { return rateScale(d.y0 + d.y); });
+
+            var effectiveLayers = stack(scope.baz);
+            svg.selectAll(".effectiveLayer")
+                .data(effectiveLayers)
+                .enter().append("path")
+                .attr("class", "effectiveLayer")
+                .attr("d", function(d) { return rateArea(d.values); })
+                .style("fill", function(d, i) { return color(i); })
+                .style("fill-opacity", "0.5");
+
             var layers = stack(scope.foobar);
             svg.selectAll(".layer")
                 .data(layers)
                 .enter().append("path")
                 .attr("class", "layer")
                 .attr("d", function(d) { return area(d.values); })
-                .style("fill", function(d, i) { return z(i); });
+                .style("fill", function(d, i) { return z(i); })
+                .style("fill-opacity", "0.5");
 
 
             draw_data();
@@ -102,6 +118,17 @@ app.directive('taxChart', ['$window', function($window) {
                 brackets = subtract_brackets(brackets, scope.rawBrackets.Federal.personalAmount);
 
                 scope.data = [];
+
+                scope.baz = [
+                    {
+                        "name": "foo",
+                        "values": []
+                    },
+                    {
+                        "name": "bar",
+                        "values": []
+                    }
+                ];
 
                 scope.foobar = [
                     {
@@ -123,6 +150,8 @@ app.directive('taxChart', ['$window', function($window) {
                     });
                     scope.foobar[0].values.push({ "x": i, "y": taxes_owed(i, brackets) / 2 });
                     scope.foobar[1].values.push({ "x": i, "y": taxes_owed(i, brackets) / 2 });
+                    scope.baz[0].values.push({ "x": i, "y": effective_rate(i, brackets) / 3 });
+                    scope.baz[1].values.push({ "x": i, "y": effective_rate(i, brackets) / 3 * 2 });
                 }
             }
 
