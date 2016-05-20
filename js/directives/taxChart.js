@@ -64,6 +64,30 @@ app.directive('taxChart', ['$window', function($window) {
 
             add_axis();
 
+
+            var z = d3.scale.category20c();
+
+            var stack = d3.layout.stack()
+                .offset("zero")
+                .values(function(d) { return d.values; })
+                .x(function(d) { return d.x; })
+                .y(function(d) { return d.y; })
+
+            var area = d3.svg.area()
+                .interpolate("cardinal")
+                .x(function(d) { return incomeScale(d.x); })
+                .y0(function(d) { return owedScale(d.y0); })
+                .y1(function(d) { return owedScale(d.y0 + d.y); });
+
+            var layers = stack(scope.foobar);
+            svg.selectAll(".layer")
+                .data(layers)
+                .enter().append("path")
+                .attr("class", "layer")
+                .attr("d", function(d) { return area(d.values); })
+                .style("fill", function(d, i) { return z(i); });
+
+
             draw_data();
 
             var mouseOnGraph = false;
@@ -79,6 +103,17 @@ app.directive('taxChart', ['$window', function($window) {
 
                 scope.data = [];
 
+                scope.foobar = [
+                    {
+                        "name": "foo",
+                        "values": []
+                    },
+                    {
+                        "name": "bar",
+                        "values": []
+                    }
+                ];
+
                 for (var i = 0; i <= 250000; i += 100) {
                     scope.data.push({
                         "Income": i,
@@ -86,6 +121,8 @@ app.directive('taxChart', ['$window', function($window) {
                         "Effective Rate": effective_rate(i, brackets),
                         "Marginal Rate": marginal_rate(i, brackets)
                     });
+                    scope.foobar[0].values.push({ "x": i, "y": taxes_owed(i, brackets) / 2 });
+                    scope.foobar[1].values.push({ "x": i, "y": taxes_owed(i, brackets) / 2 });
                 }
             }
 
