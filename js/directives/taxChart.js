@@ -67,41 +67,68 @@ app.directive('taxChart', ['$window', function($window) {
 
             var z = d3.scale.category20c();
 
-            var stack = d3.layout.stack()
+            var taxStack = d3.layout.stack()
                 .offset("zero")
                 .values(function(d) { return d.values; })
-                .x(function(d) { return d.x; })
-                .y(function(d) { return d.y; })
+                .x(function(d) { return d.income; })
+                .y(function(d) { return d.tax; })
+
+            var effectiveStack = d3.layout.stack()
+                .offset("zero")
+                .values(function(d) { return d.values; })
+                .x(function(d) { return d.income; })
+                .y(function(d) { return d.effective; })
+
+            var marginalStack = d3.layout.stack()
+                .offset("zero")
+                .values(function(d) { return d.values; })
+                .x(function(d) { return d.income; })
+                .y(function(d) { return d.marginal; })
 
             var area = d3.svg.area()
                 .interpolate("cardinal")
-                .x(function(d) { return incomeScale(d.x); })
+                .x(function(d) { return incomeScale(d.income); })
                 .y0(function(d) { return owedScale(d.y0); })
-                .y1(function(d) { return owedScale(d.y0 + d.y); });
+                .y1(function(d) { return owedScale(d.y0 + d.tax); });
 
-            var rateArea = d3.svg.area()
+            var effectiveArea = d3.svg.area()
                 .interpolate("cardinal")
-                .x(function(d) { return incomeScale(d.x); })
+                .x(function(d) { return incomeScale(d.income); })
                 .y0(function(d) { return rateScale(d.y0); })
-                .y1(function(d) { return rateScale(d.y0 + d.y); });
+                .y1(function(d) { return rateScale(d.y0 + d.effective); });
 
-            var effectiveLayers = stack(scope.baz);
+            var marginalArea = d3.svg.area()
+                .interpolate("cardinal")
+                .x(function(d) { return incomeScale(d.income); })
+                .y0(function(d) { return rateScale(d.y0); })
+                .y1(function(d) { return rateScale(d.y0 + d.marginal); });
+
+            var marginalLayers = marginalStack(scope.taxes);
+            svg.selectAll(".marginalLayer")
+                .data(marginalLayers)
+                .enter().append("path")
+                .attr("class", "marginalLayer")
+                .attr("d", function(d) { return marginalArea(d.values); })
+                .style("fill", function(d, i) { return color(i); })
+                .style("fill-opacity", "0.3");
+
+            var effectiveLayers = effectiveStack(scope.taxes);
             svg.selectAll(".effectiveLayer")
                 .data(effectiveLayers)
                 .enter().append("path")
                 .attr("class", "effectiveLayer")
-                .attr("d", function(d) { return rateArea(d.values); })
+                .attr("d", function(d) { return effectiveArea(d.values); })
                 .style("fill", function(d, i) { return color(i); })
-                .style("fill-opacity", "0.5");
+                .style("fill-opacity", "0.3");
 
-            var layers = stack(scope.foobar);
+            var layers = taxStack(scope.taxes);
             svg.selectAll(".layer")
                 .data(layers)
                 .enter().append("path")
                 .attr("class", "layer")
                 .attr("d", function(d) { return area(d.values); })
                 .style("fill", function(d, i) { return z(i); })
-                .style("fill-opacity", "0.5");
+                .style("fill-opacity", "0.3");
 
 
             draw_data();
@@ -117,26 +144,18 @@ app.directive('taxChart', ['$window', function($window) {
                 brackets = subtract_brackets(brackets, scope.rawBrackets[scope.currentProvince].personalAmount);
                 brackets = subtract_brackets(brackets, scope.rawBrackets.Federal.personalAmount);
 
+                var fed_bracket = subtract_brackets(scope.rawBrackets.Federal.income, scope.rawBrackets.Federal.personalAmount);
+                var prov_bracket = subtract_brackets(scope.rawBrackets[scope.currentProvince].income, scope.rawBrackets[scope.currentProvince].personalAmount);
+
                 scope.data = [];
 
-                scope.baz = [
+                scope.taxes = [
                     {
-                        "name": "foo",
+                        "name": "Federal",
                         "values": []
                     },
                     {
-                        "name": "bar",
-                        "values": []
-                    }
-                ];
-
-                scope.foobar = [
-                    {
-                        "name": "foo",
-                        "values": []
-                    },
-                    {
-                        "name": "bar",
+                        "name": "Provincial",
                         "values": []
                     }
                 ];
@@ -148,10 +167,18 @@ app.directive('taxChart', ['$window', function($window) {
                         "Effective Rate": effective_rate(i, brackets),
                         "Marginal Rate": marginal_rate(i, brackets)
                     });
-                    scope.foobar[0].values.push({ "x": i, "y": taxes_owed(i, brackets) / 2 });
-                    scope.foobar[1].values.push({ "x": i, "y": taxes_owed(i, brackets) / 2 });
-                    scope.baz[0].values.push({ "x": i, "y": effective_rate(i, brackets) / 3 });
-                    scope.baz[1].values.push({ "x": i, "y": effective_rate(i, brackets) / 3 * 2 });
+                    d3.map(scope.taxes, function(d) { return d.name; }).get("Federal").values.push({
+                        "income": i,
+                        "tax": taxes_owed(i, fed_bracket),
+                        "effective": effective_rate(i, fed_bracket),
+                        "marginal": marginal_rate(i, fed_bracket),
+                    });
+                    d3.map(scope.taxes, function(d) { return d.name; }).get("Provincial").values.push({
+                        "income": i,
+                        "tax": taxes_owed(i, prov_bracket),
+                        "effective": effective_rate(i, prov_bracket),
+                        "marginal": marginal_rate(i, prov_bracket),
+                    });
                 }
             }
 
