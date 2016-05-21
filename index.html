@@ -26,20 +26,6 @@
     <script src="js/controllers/MainController.js"></script>
     <script src="js/directives/taxChart.js"></script>
 
-    <script type="text/ng-template" id="group-template.html">
-        <div class="panel {{panelClass || 'panel-default'}}">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a href tabindex="0" class="accordion-toggle" ng-click="toggleOpen()" uib-accordion-transclude="heading"><span
-                        ng-class="{'text-muted': isDisabled}">{{heading}} <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': isOpen, 'glyphicon-chevron-right': !isOpen}"></i></span></a>
-                </h4>
-            </div>
-            <div class="panel-collapse collapse" uib-collapse="!isOpen">
-                <div class="panel-body" ng-transclude></div>
-            </div>
-        </div>
-    </script>
-
     <div class="container">
         <div class="main" ng-controller="MainController">
 			<div class="row">
@@ -64,7 +50,7 @@
 
 			<div class="row">
 				<uib-accordion>
-					<uib-accordion-group heading="How do tax credits and deductions affect my taxes?" is-open=true template-url="group-template.html">
+					<uib-accordion-group heading="How do tax credits and deductions affect my taxes?" is-open=true template-url="templates/group-template.html">
 						<p uib-popover="Refundable tax credits are very similar to the government writing you a cheque at the end of the year, regardless of what you earned or how much you owe on your taxes. If your owe $0 or $50,000 in taxes, you will receive the same benefit." popover-trigger="mouseenter">Credits (Refundable)<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>:</p> <slider
 							ng-model="sliders.creditRefundable"
 							formatter="sliderFormat(value)"
