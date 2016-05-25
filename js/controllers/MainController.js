@@ -198,6 +198,9 @@ app.controller("MainController", ["$scope", "$filter", function($scope, $filter)
         $scope.calculateData();
         $scope.renderCredits();
     };
+    $scope.$watch('sliders.creditRefundable', $scope.changeCreditsAndDeductions);
+    $scope.$watch('sliders.creditNonRefundable', $scope.changeCreditsAndDeductions);
+    $scope.$watch('sliders.deduction', $scope.changeCreditsAndDeductions);
     $scope.sliderFormat = function(value) {
         return $filter('currency')(value, '$', 0);
     }

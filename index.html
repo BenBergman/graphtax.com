@@ -63,23 +63,20 @@
 							ng-model="sliders.creditRefundable"
 							formatter="sliderFormat(value)"
 							min="min"
-							max="max"
-							on-slide="changeCreditsAndDeductions()"
-							on-stop-slide="changeCreditsAndDeductions()"></slider>
+							max="max"></slider>
 						<p uib-popover="Non-refundable tax credits can only cancel out other taxes that you owe. You will only receive a benefit if you otherwise owe money for taxes." popover-trigger="mouseenter">Credits (Non-refundable)<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>:</p> <slider
 							ng-model="sliders.creditNonRefundable"
 							formatter="sliderFormat(value)"
 							min="min"
-							max="max"
-							on-slide="changeCreditsAndDeductions()"
-							on-stop-slide="changeCreditsAndDeductions()"></slider>
+							max="max"></slider>
 						<p uib-popover="Tax deductions effectively reduce the amount of your income for the year that gets taxed." popover-trigger="mouseenter">Deductions<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>:</p> <slider
 							ng-model="sliders.deduction"
 							formatter="sliderFormat(value)"
 							min="min"
-							max="max"
-							on-slide="changeCreditsAndDeductions()"
-							on-stop-slide="changeCreditsAndDeductions()"></slider>
+							max="max"></slider>
+						<button class="btn btn-default" ng-click="sliders.creditRefundable = 0; sliders.creditNonRefundable = 0; sliders.deduction = 0">
+							Reset
+						</button>
 					</uib-accordion-group>
 					<uib-accordion-group heading="What taxes do I pay?" template-url="templates/group-template.html">
 						<p>
