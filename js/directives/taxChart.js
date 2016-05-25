@@ -123,74 +123,7 @@ app.directive('taxChart', ['$window', function($window) {
 
 
             add_axis();
-
-
-            var z = d3.scale.category20c();
-
-            var taxStack = d3.layout.stack()
-                .offset("zero")
-                .values(function(d) { return d.values; })
-                .x(function(d) { return d.income; })
-                .y(function(d) { return d.tax; })
-
-            var effectiveStack = d3.layout.stack()
-                .offset("zero")
-                .values(function(d) { return d.values; })
-                .x(function(d) { return d.income; })
-                .y(function(d) { return d.effective; })
-
-            var marginalStack = d3.layout.stack()
-                .offset("zero")
-                .values(function(d) { return d.values; })
-                .x(function(d) { return d.income; })
-                .y(function(d) { return d.marginal; })
-
-            var area = d3.svg.area()
-                .interpolate("cardinal")
-                .x(function(d) { return incomeScale(d.income); })
-                .y0(function(d) { return owedScale(d.y0); })
-                .y1(function(d) { return owedScale(d.y0 + d.tax); });
-
-            var effectiveArea = d3.svg.area()
-                .interpolate("cardinal")
-                .x(function(d) { return incomeScale(d.income); })
-                .y0(function(d) { return rateScale(d.y0); })
-                .y1(function(d) { return rateScale(d.y0 + d.effective); });
-
-            var marginalArea = d3.svg.area()
-                .interpolate("cardinal")
-                .x(function(d) { return incomeScale(d.income); })
-                .y0(function(d) { return rateScale(d.y0); })
-                .y1(function(d) { return rateScale(d.y0 + d.marginal); });
-
-            var marginalLayers = marginalStack(scope.taxes);
-            svg.selectAll(".marginalLayer")
-                .data(marginalLayers)
-                .enter().append("path")
-                .attr("class", "marginalLayer")
-                .attr("d", function(d) { return marginalArea(d.values); })
-                .style("fill", function(d, i) { return color(i); })
-                .style("fill-opacity", "0.3");
-
-            var effectiveLayers = effectiveStack(scope.taxes);
-            svg.selectAll(".effectiveLayer")
-                .data(effectiveLayers)
-                .enter().append("path")
-                .attr("class", "effectiveLayer")
-                .attr("d", function(d) { return effectiveArea(d.values); })
-                .style("fill", function(d, i) { return color(i); })
-                .style("fill-opacity", "0.3");
-
-            var layers = taxStack(scope.taxes);
-            svg.selectAll(".layer")
-                .data(layers)
-                .enter().append("path")
-                .attr("class", "layer")
-                .attr("d", function(d) { return area(d.values); })
-                .style("fill", function(d, i) { return z(i); })
-                .style("fill-opacity", "0.3");
-
-
+            draw_areas();
             draw_data();
 
             var mouseOnGraph = false;
@@ -326,6 +259,74 @@ app.directive('taxChart', ['$window', function($window) {
                 }
                 scope.$apply();
             };
+
+
+            function draw_areas() {
+                var z = d3.scale.category20c();
+
+                var taxStack = d3.layout.stack()
+                    .offset("zero")
+                    .values(function(d) { return d.values; })
+                    .x(function(d) { return d.income; })
+                    .y(function(d) { return d.tax; })
+
+                var effectiveStack = d3.layout.stack()
+                    .offset("zero")
+                    .values(function(d) { return d.values; })
+                    .x(function(d) { return d.income; })
+                    .y(function(d) { return d.effective; })
+
+                var marginalStack = d3.layout.stack()
+                    .offset("zero")
+                    .values(function(d) { return d.values; })
+                    .x(function(d) { return d.income; })
+                    .y(function(d) { return d.marginal; })
+
+                var area = d3.svg.area()
+                    .interpolate("cardinal")
+                    .x(function(d) { return incomeScale(d.income); })
+                    .y0(function(d) { return owedScale(d.y0); })
+                    .y1(function(d) { return owedScale(d.y0 + d.tax); });
+
+                var effectiveArea = d3.svg.area()
+                    .interpolate("cardinal")
+                    .x(function(d) { return incomeScale(d.income); })
+                    .y0(function(d) { return rateScale(d.y0); })
+                    .y1(function(d) { return rateScale(d.y0 + d.effective); });
+
+                var marginalArea = d3.svg.area()
+                    .interpolate("cardinal")
+                    .x(function(d) { return incomeScale(d.income); })
+                    .y0(function(d) { return rateScale(d.y0); })
+                    .y1(function(d) { return rateScale(d.y0 + d.marginal); });
+
+                var marginalLayers = marginalStack(scope.taxes);
+                svg.selectAll(".marginalLayer")
+                    .data(marginalLayers)
+                    .enter().append("path")
+                    .attr("class", "marginalLayer")
+                    .attr("d", function(d) { return marginalArea(d.values); })
+                    .style("fill", function(d, i) { return color(i); })
+                    .style("fill-opacity", "0.3");
+
+                var effectiveLayers = effectiveStack(scope.taxes);
+                svg.selectAll(".effectiveLayer")
+                    .data(effectiveLayers)
+                    .enter().append("path")
+                    .attr("class", "effectiveLayer")
+                    .attr("d", function(d) { return effectiveArea(d.values); })
+                    .style("fill", function(d, i) { return color(i); })
+                    .style("fill-opacity", "0.3");
+
+                var layers = taxStack(scope.taxes);
+                svg.selectAll(".layer")
+                    .data(layers)
+                    .enter().append("path")
+                    .attr("class", "layer")
+                    .attr("d", function(d) { return area(d.values); })
+                    .style("fill", function(d, i) { return z(i); })
+                    .style("fill-opacity", "0.3");
+            }
 
 
             function draw_data() {
