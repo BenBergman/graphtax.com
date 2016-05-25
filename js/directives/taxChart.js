@@ -2,6 +2,66 @@ app.directive('taxChart', ['$window', function($window) {
     return {
         restrict: 'EA',
         link: function(scope, element, attrs) {
+            scope.calculateData = function() {
+                var brackets = add_brackets(scope.rawBrackets[scope.currentProvince].income, scope.rawBrackets.Federal.income);
+                brackets = subtract_brackets(brackets, scope.rawBrackets[scope.currentProvince].personalAmount);
+                brackets = subtract_brackets(brackets, scope.rawBrackets.Federal.personalAmount);
+
+                var fed_bracket = subtract_brackets(scope.rawBrackets.Federal.income, scope.rawBrackets.Federal.personalAmount);
+                var prov_bracket = subtract_brackets(scope.rawBrackets[scope.currentProvince].income, scope.rawBrackets[scope.currentProvince].personalAmount);
+
+
+                scope.data = [];
+
+                scope.taxes = [
+                    {
+                        "name": "Federal",
+                        "values": []
+                    },
+                    {
+                        "name": "Provincial",
+                        "values": []
+                    }
+                ];
+
+                for (var i = 0; i <= 250000; i += 100) {
+                    var tax_owed = taxes_owed(i - scope.sliders.deduction, brackets) - scope.sliders.creditRefundable;
+                    if (tax_owed > 0) {
+                        tax_owed -= scope.sliders.creditNonRefundable;
+                        if (tax_owed < 0) {
+                            tax_owed = 0;
+                        }
+                    }
+                    var eff_rate = 0;
+                    if (i > 0) {
+                        eff_rate = tax_owed / i;
+                    }
+                    var marg_rate = marginal_rate(i - scope.sliders.deduction, brackets);
+                    if (tax_owed == 0) {
+                        marg_rate = 0;
+                    }
+                    scope.data.push({
+                        "Income": i,
+                        "Tax": tax_owed,
+                        "Effective Rate": eff_rate,
+                        "Marginal Rate": marg_rate
+                    });
+                    d3.map(scope.taxes, function(d) { return d.name; }).get("Federal").values.push({
+                        "income": i,
+                        "tax": taxes_owed(i, fed_bracket),
+                        "effective": effective_rate(i, fed_bracket),
+                        "marginal": marginal_rate(i, fed_bracket),
+                    });
+                    d3.map(scope.taxes, function(d) { return d.name; }).get("Provincial").values.push({
+                        "income": i,
+                        "tax": taxes_owed(i, prov_bracket),
+                        "effective": effective_rate(i, prov_bracket),
+                        "marginal": marginal_rate(i, prov_bracket),
+                    });
+                }
+            }
+
+
             var width = element[0].clientWidth;
             var height = width/2;
             var margins = {
@@ -19,7 +79,7 @@ app.directive('taxChart', ['$window', function($window) {
                     "height": height
                 });
 
-            create_initial_data_set();
+            scope.calculateData();
 
 
             var incomeScale = d3.scale.linear()
@@ -137,50 +197,6 @@ app.directive('taxChart', ['$window', function($window) {
             svg.on("mousemove", update_cursor_line);
 
             angular.element($window).on('resize', resize);
-
-
-            function create_initial_data_set() {
-                var brackets = add_brackets(scope.rawBrackets[scope.currentProvince].income, scope.rawBrackets.Federal.income);
-                brackets = subtract_brackets(brackets, scope.rawBrackets[scope.currentProvince].personalAmount);
-                brackets = subtract_brackets(brackets, scope.rawBrackets.Federal.personalAmount);
-
-                var fed_bracket = subtract_brackets(scope.rawBrackets.Federal.income, scope.rawBrackets.Federal.personalAmount);
-                var prov_bracket = subtract_brackets(scope.rawBrackets[scope.currentProvince].income, scope.rawBrackets[scope.currentProvince].personalAmount);
-
-                scope.data = [];
-
-                scope.taxes = [
-                    {
-                        "name": "Federal",
-                        "values": []
-                    },
-                    {
-                        "name": "Provincial",
-                        "values": []
-                    }
-                ];
-
-                for (var i = 0; i <= 250000; i += 100) {
-                    scope.data.push({
-                        "Income": i,
-                        "Tax": taxes_owed(i, brackets),
-                        "Effective Rate": effective_rate(i, brackets),
-                        "Marginal Rate": marginal_rate(i, brackets)
-                    });
-                    d3.map(scope.taxes, function(d) { return d.name; }).get("Federal").values.push({
-                        "income": i,
-                        "tax": taxes_owed(i, fed_bracket),
-                        "effective": effective_rate(i, fed_bracket),
-                        "marginal": marginal_rate(i, fed_bracket),
-                    });
-                    d3.map(scope.taxes, function(d) { return d.name; }).get("Provincial").values.push({
-                        "income": i,
-                        "tax": taxes_owed(i, prov_bracket),
-                        "effective": effective_rate(i, prov_bracket),
-                        "marginal": marginal_rate(i, prov_bracket),
-                    });
-                }
-            }
 
 
             function add_axis() {

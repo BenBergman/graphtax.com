@@ -191,55 +191,11 @@ app.controller("MainController", ["$scope", "$filter", function($scope, $filter)
     $scope.data = [];
     $scope.changeProvince = function(province) {
         $scope.currentProvince = province;
-
-        var brackets = add_brackets($scope.rawBrackets[province].income, $scope.rawBrackets.Federal.income);
-        brackets = subtract_brackets(brackets, $scope.rawBrackets[province].personalAmount);
-        brackets = subtract_brackets(brackets, $scope.rawBrackets.Federal.personalAmount);
-
-        $scope.data = [];
-
-        for (var i = 0; i <= 250000; i += 100) {
-            $scope.data.push({
-                "Income": i,
-                "Tax": taxes_owed(i, brackets),
-                "Effective Rate": effective_rate(i, brackets),
-                "Marginal Rate": marginal_rate(i, brackets)
-            });
-        }
-
+        $scope.calculateData();
         $scope.render();
     };
     $scope.changeCreditsAndDeductions = function() {
-        var brackets = add_brackets($scope.rawBrackets[$scope.currentProvince].income, $scope.rawBrackets.Federal.income);
-        brackets = subtract_brackets(brackets, $scope.rawBrackets[$scope.currentProvince].personalAmount);
-        brackets = subtract_brackets(brackets, $scope.rawBrackets.Federal.personalAmount);
-
-        $scope.data = [];
-
-        for (var i = 0; i <= 250000; i += 100) {
-            var tax_owed = taxes_owed(i - $scope.sliders.deduction, brackets) - $scope.sliders.creditRefundable;
-            if (tax_owed > 0) {
-                tax_owed -= $scope.sliders.creditNonRefundable;
-                if (tax_owed < 0) {
-                    tax_owed = 0;
-                }
-            }
-            var effective_rate = 0;
-            if (i > 0) {
-                effective_rate = tax_owed / i;
-            }
-            var marg_rate = marginal_rate(i - $scope.sliders.deduction, brackets);
-            if (tax_owed == 0) {
-                marg_rate = 0;
-            }
-            $scope.data.push({
-                "Income": i,
-                "Tax": tax_owed,
-                "Effective Rate": effective_rate,
-                "Marginal Rate": marg_rate
-            });
-        }
-
+        $scope.calculateData();
         $scope.renderCredits();
     };
     $scope.sliderFormat = function(value) {
