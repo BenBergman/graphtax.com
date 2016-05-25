@@ -346,10 +346,7 @@ app.directive('taxChart', ['$window', function($window) {
                     .attr('d', lineGenMarg(scope.data))
                     .attr('stroke', color("Marginal Rate"))
                     .attr('stroke-width', 2)
-                    .attr('fill', 'none')
-                    .on("mouseover", function() {
-                        console.log("foobar");
-                    });
+                    .attr('fill', 'none');
             }
 
 
