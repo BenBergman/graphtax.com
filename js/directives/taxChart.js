@@ -24,6 +24,29 @@ app.directive('taxChart', ['$window', function($window) {
                     }
                 ];
 
+                scope.effective = [
+                    {
+                        "name": "Federal",
+                        "values": []
+                    },
+                    {
+                        "name": "Provincial",
+                        "values": []
+                    }
+                ];
+
+                scope.marginal = [
+                    {
+                        "name": "Federal",
+                        "values": []
+                    },
+                    {
+                        "name": "Provincial",
+                        "values": []
+                    }
+                ];
+
+
                 for (var i = 0; i <= 250000; i += 100) {
                     var tax_owed = taxes_owed(i - scope.sliders.deduction, brackets) - scope.sliders.creditRefundable;
                     if (tax_owed > 0) {
@@ -49,13 +72,25 @@ app.directive('taxChart', ['$window', function($window) {
                     d3.map(scope.taxes, function(d) { return d.name; }).get("Federal").values.push({
                         "income": i,
                         "tax": taxes_owed(i, fed_bracket),
-                        "effective": effective_rate(i, fed_bracket),
-                        "marginal": marginal_rate(i, fed_bracket),
                     });
                     d3.map(scope.taxes, function(d) { return d.name; }).get("Provincial").values.push({
                         "income": i,
                         "tax": taxes_owed(i, prov_bracket),
+                    });
+                    d3.map(scope.effective, function(d) { return d.name; }).get("Federal").values.push({
+                        "income": i,
+                        "effective": effective_rate(i, fed_bracket),
+                    });
+                    d3.map(scope.effective, function(d) { return d.name; }).get("Provincial").values.push({
+                        "income": i,
                         "effective": effective_rate(i, prov_bracket),
+                    });
+                    d3.map(scope.marginal, function(d) { return d.name; }).get("Federal").values.push({
+                        "income": i,
+                        "marginal": marginal_rate(i, fed_bracket),
+                    });
+                    d3.map(scope.marginal, function(d) { return d.name; }).get("Provincial").values.push({
+                        "income": i,
                         "marginal": marginal_rate(i, prov_bracket),
                     });
                 }
@@ -104,6 +139,42 @@ app.directive('taxChart', ['$window', function($window) {
                     .scale(rateScale)
                     .tickFormat(d3.format("%"))
                     .orient("left");
+
+            var taxStack = d3.layout.stack()
+                .offset("zero")
+                .values(function(d) { return d.values; })
+                .x(function(d) { return d.income; })
+                .y(function(d) { return d.tax; })
+
+            var effectiveStack = d3.layout.stack()
+                .offset("zero")
+                .values(function(d) { return d.values; })
+                .x(function(d) { return d.income; })
+                .y(function(d) { return d.effective; })
+
+            var marginalStack = d3.layout.stack()
+                .offset("zero")
+                .values(function(d) { return d.values; })
+                .x(function(d) { return d.income; })
+                .y(function(d) { return d.marginal; })
+
+            var area = d3.svg.area()
+                .interpolate("cardinal")
+                .x(function(d) { return incomeScale(d.income); })
+                .y0(function(d) { return owedScale(d.y0); })
+                .y1(function(d) { return owedScale(d.y0 + d.tax); });
+
+            var effectiveArea = d3.svg.area()
+                .interpolate("cardinal")
+                .x(function(d) { return incomeScale(d.income); })
+                .y0(function(d) { return rateScale(d.y0); })
+                .y1(function(d) { return rateScale(d.y0 + d.effective); });
+
+            var marginalArea = d3.svg.area()
+                .interpolate("cardinal")
+                .x(function(d) { return incomeScale(d.income); })
+                .y0(function(d) { return rateScale(d.y0); })
+                .y1(function(d) { return rateScale(d.y0 + d.marginal); });
 
             var lineGenTax = d3.svg.line()
                 .x(function(d) { return incomeScale(d.Income); })
@@ -209,13 +280,13 @@ app.directive('taxChart', ['$window', function($window) {
                                 "stroke-width": "2px"
                             });
                         svg.append("circle")
-                            .attr("id", "taxPoint")
+                            .attr("id", "marginalPoint")
                             .attr("r", 4.5);
                         svg.append("circle")
                             .attr("id", "effectivePoint")
                             .attr("r", 4.5);
                         svg.append("circle")
-                            .attr("id", "marginalPoint")
+                            .attr("id", "taxPoint")
                             .attr("r", 4.5);
                     }
                     mouseOnGraph = true;
@@ -264,43 +335,7 @@ app.directive('taxChart', ['$window', function($window) {
             function draw_areas() {
                 var z = d3.scale.category20c();
 
-                var taxStack = d3.layout.stack()
-                    .offset("zero")
-                    .values(function(d) { return d.values; })
-                    .x(function(d) { return d.income; })
-                    .y(function(d) { return d.tax; })
-
-                var effectiveStack = d3.layout.stack()
-                    .offset("zero")
-                    .values(function(d) { return d.values; })
-                    .x(function(d) { return d.income; })
-                    .y(function(d) { return d.effective; })
-
-                var marginalStack = d3.layout.stack()
-                    .offset("zero")
-                    .values(function(d) { return d.values; })
-                    .x(function(d) { return d.income; })
-                    .y(function(d) { return d.marginal; })
-
-                var area = d3.svg.area()
-                    .interpolate("cardinal")
-                    .x(function(d) { return incomeScale(d.income); })
-                    .y0(function(d) { return owedScale(d.y0); })
-                    .y1(function(d) { return owedScale(d.y0 + d.tax); });
-
-                var effectiveArea = d3.svg.area()
-                    .interpolate("cardinal")
-                    .x(function(d) { return incomeScale(d.income); })
-                    .y0(function(d) { return rateScale(d.y0); })
-                    .y1(function(d) { return rateScale(d.y0 + d.effective); });
-
-                var marginalArea = d3.svg.area()
-                    .interpolate("cardinal")
-                    .x(function(d) { return incomeScale(d.income); })
-                    .y0(function(d) { return rateScale(d.y0); })
-                    .y1(function(d) { return rateScale(d.y0 + d.marginal); });
-
-                var marginalLayers = marginalStack(scope.taxes);
+                var marginalLayers = marginalStack(scope.marginal);
                 svg.selectAll(".marginalLayer")
                     .data(marginalLayers)
                     .enter().append("path")
@@ -309,7 +344,7 @@ app.directive('taxChart', ['$window', function($window) {
                     .style("fill", function(d, i) { return color(i); })
                     .style("fill-opacity", "0.3");
 
-                var effectiveLayers = effectiveStack(scope.taxes);
+                var effectiveLayers = effectiveStack(scope.effective);
                 svg.selectAll(".effectiveLayer")
                     .data(effectiveLayers)
                     .enter().append("path")
@@ -331,9 +366,9 @@ app.directive('taxChart', ['$window', function($window) {
 
             function draw_data() {
                 svg.append('svg:path')
-                    .attr('id', 'tax')
-                    .attr('d', lineGenTax(scope.data))
-                    .attr('stroke', color("Tax"))
+                    .attr('id', 'marginal')
+                    .attr('d', lineGenMarg(scope.data))
+                    .attr('stroke', color("Marginal Rate"))
                     .attr('stroke-width', 2)
                     .attr('fill', 'none');
                 svg.append('svg:path')
@@ -343,9 +378,9 @@ app.directive('taxChart', ['$window', function($window) {
                     .attr('stroke-width', 2)
                     .attr('fill', 'none');
                 svg.append('svg:path')
-                    .attr('id', 'marginal')
-                    .attr('d', lineGenMarg(scope.data))
-                    .attr('stroke', color("Marginal Rate"))
+                    .attr('id', 'tax')
+                    .attr('d', lineGenTax(scope.data))
+                    .attr('stroke', color("Tax"))
                     .attr('stroke-width', 2)
                     .attr('fill', 'none');
             }
@@ -399,9 +434,31 @@ app.directive('taxChart', ['$window', function($window) {
 
 
             scope.render = function() {
+                var transition_time_one = 2000;
+                var transition_time_two = 2000;
+
                 var tempTax = lineGenTax(scope.data);
                 var tempEff = lineGenEff(scope.data);
                 var tempMarg = lineGenMarg(scope.data);
+
+                svg.selectAll(".layer")
+                    .data(taxStack(scope.taxes))
+                    .transition()
+                    .duration(transition_time_one)
+                    .attr("d", function(d) { return area(d.values); });
+
+                svg.selectAll(".effectiveLayer")
+                    .data(effectiveStack(scope.effective))
+                    .transition()
+                    .duration(transition_time_one)
+                    .attr("d", function(d) { return effectiveArea(d.values); });
+
+                svg.selectAll(".marginalLayer")
+                    .data(marginalStack(scope.marginal))
+                    .transition()
+                    .duration(transition_time_one)
+                    .attr("d", function(d) { return marginalArea(d.values); });
+
 
                 incomeScale
                     .domain([0, d3.max(scope.data, function(d) { return d["Income"]; })]);
@@ -410,8 +467,6 @@ app.directive('taxChart', ['$window', function($window) {
                 rateScale
                     .domain([0, d3.max(scope.data, function(d) { return d["Marginal Rate"]; })]);
 
-                var transition_time_one = 2000;
-                var transition_time_two = 2000;
 
                 d3.select('#incomeaxis')
                     .transition()
@@ -431,35 +486,51 @@ app.directive('taxChart', ['$window', function($window) {
                     .duration(transition_time_two)
                     .call(rateAxis);
 
+
                 d3.select('#tax')
                     .transition()
                     .duration(transition_time_one)
-                    .attr('d', tempTax);
-                d3.select('#tax')
+                    .attr('d', tempTax)
                     .transition()
-                    .delay(transition_time_one)
                     .duration(transition_time_two)
                     .attr('d', lineGenTax(scope.data));
 
                 d3.select('#effective')
                     .transition()
                     .duration(transition_time_one)
-                    .attr('d', tempEff);
-                d3.select('#effective')
+                    .attr('d', tempEff)
                     .transition()
-                    .delay(transition_time_one)
                     .duration(transition_time_two)
                     .attr('d', lineGenEff(scope.data));
 
                 d3.select('#marginal')
                     .transition()
                     .duration(transition_time_one)
-                    .attr('d', tempMarg);
-                d3.select('#marginal')
+                    .attr('d', tempMarg)
+                    .transition()
+                    .duration(transition_time_two)
+                    .attr('d', lineGenMarg(scope.data));
+
+
+                svg.selectAll(".layer")
+                    .data(taxStack(scope.taxes))
                     .transition()
                     .delay(transition_time_one)
                     .duration(transition_time_two)
-                    .attr('d', lineGenMarg(scope.data));
+                    .attr("d", function(d) { return area(d.values); });
+
+                svg.selectAll(".effectiveLayer")
+                    .transition()
+                    .delay(transition_time_one)
+                    .duration(transition_time_two)
+                    .attr("d", function(d) { return effectiveArea(d.values); });
+
+                svg.selectAll(".marginalLayer")
+                    .data(marginalStack(scope.marginal))
+                    .transition()
+                    .delay(transition_time_one)
+                    .duration(transition_time_two)
+                    .attr("d", function(d) { return marginalArea(d.values); });
             };
 
             scope.renderCredits = function() {
