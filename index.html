@@ -59,21 +59,18 @@
 						</p>
 					</uib-accordion-group>
 					<uib-accordion-group heading="How do tax credits and deductions affect my taxes?" is-open=true template-url="templates/group-template.html">
-						<p uib-popover="Refundable tax credits are very similar to the government writing you a cheque at the end of the year, regardless of what you earned or how much you owe on your taxes. If your owe $0 or $50,000 in taxes, you will receive the same benefit." popover-trigger="mouseenter">Credits (Refundable)<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>:</p> <slider
-							ng-model="sliders.creditRefundable"
-							formatter="sliderFormat(value)"
-							min="min"
-							max="max"></slider>
-						<p uib-popover="Non-refundable tax credits can only cancel out other taxes that you owe. You will only receive a benefit if you otherwise owe money for taxes." popover-trigger="mouseenter">Credits (Non-refundable)<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>:</p> <slider
-							ng-model="sliders.creditNonRefundable"
-							formatter="sliderFormat(value)"
-							min="min"
-							max="max"></slider>
-						<p uib-popover="Tax deductions effectively reduce the amount of your income for the year that gets taxed." popover-trigger="mouseenter">Deductions<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>:</p> <slider
-							ng-model="sliders.deduction"
-							formatter="sliderFormat(value)"
-							min="min"
-							max="max"></slider>
+						<p uib-popover="Refundable tax credits are very similar to the government writing you a cheque at the end of the year, regardless of what you earned or how much you owe on your taxes. If your owe $0 or $50,000 in taxes, you will receive the same benefit." popover-trigger="mouseenter">
+							Credits (Refundable)<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>:
+						</p>
+						<slider ng-model="sliders.creditRefundable" formatter="sliderFormat(value)" min="min" max="max"></slider>
+						<p uib-popover="Non-refundable tax credits can only cancel out other taxes that you owe. You will only receive a benefit if you otherwise owe money for taxes." popover-trigger="mouseenter">
+							Credits (Non-refundable)<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>:
+						</p>
+						<slider ng-model="sliders.creditNonRefundable" formatter="sliderFormat(value)" min="min" max="max"></slider>
+						<p uib-popover="Tax deductions effectively reduce the amount of your income for the year that gets taxed." popover-trigger="mouseenter">
+							Deductions<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>:
+						</p>
+						<slider ng-model="sliders.deduction" formatter="sliderFormat(value)" min="min" max="max"></slider>
 						<button class="btn btn-default" ng-click="sliders.creditRefundable = 0; sliders.creditNonRefundable = 0; sliders.deduction = 0">
 							Reset
 						</button>
