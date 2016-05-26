@@ -1,6 +1,12 @@
 app.controller("MainController", ["$scope", "$filter", function($scope, $filter) {
     $scope.min = 0;
     $scope.max = 100000;
+    $scope.accordion = {
+        earn: false,
+        credits: false,
+        breakdown: true
+    };
+    $scope.$watch('accordion.earn', function() { console.log('wut wut!'); });
     $scope.sliders = {
         "creditRefundable": 0,
         "creditNonRefundable": 0,
