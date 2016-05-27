@@ -2,9 +2,9 @@ app.controller("MainController", ["$scope", "$filter", function($scope, $filter)
     $scope.min = 0;
     $scope.max = 50000;
     $scope.accordions = {
-        earn: false,
+        earn: true,
         credits: false,
-        breakdown: true
+        breakdown: false,
     };
     $scope.$watch('accordions.credits', function() {
         $scope.calculateData();
