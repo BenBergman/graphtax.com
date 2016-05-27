@@ -460,6 +460,13 @@ app.directive('taxChart', ['$window', function($window) {
                     .attr('d', lineGenEff(scope.data));
                 d3.select('#marginal')
                     .attr('d', lineGenMarg(scope.data));
+
+                svg.selectAll(".taxLayer")
+                    .attr("d", function(d) { return area(d.values); });
+                svg.selectAll(".effectiveLayer")
+                    .attr("d", function(d) { return effectiveArea(d.values); });
+                svg.selectAll(".marginalLayer")
+                    .attr("d", function(d) { return marginalArea(d.values); });
             };
 
 
