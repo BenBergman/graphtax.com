@@ -294,10 +294,38 @@ app.directive('taxChart', ['$window', function($window) {
                     mouseOnGraph = true;
 
                     scope.currentIncome = incomeScale.invert(x);
-                    var dataPoint = scope.data[Math.round(scope.currentIncome/100)];
+                    var dataIndex = Math.round(scope.currentIncome/100);
+                    var dataPoint = scope.data[dataIndex];
                     scope.currentTax = dataPoint["Tax"];
                     scope.currentEff = dataPoint["Effective Rate"];
                     scope.currentMarg = dataPoint["Marginal Rate"];
+
+                    scope.currentFederalTax = d3.map(scope.taxes, function(d) { return d.name; })
+                        .get("Federal")
+                        .values[dataIndex]
+                        .tax;
+                    scope.currentProvincialTax = d3.map(scope.taxes, function(d) { return d.name; })
+                        .get("Provincial")
+                        .values[dataIndex]
+                        .tax;
+
+                    scope.currentFederalEff = d3.map(scope.effective, function(d) { return d.name; })
+                        .get("Federal")
+                        .values[dataIndex]
+                        .effective;
+                    scope.currentProvincialEff = d3.map(scope.effective, function(d) { return d.name; })
+                        .get("Provincial")
+                        .values[dataIndex]
+                        .effective;
+
+                    scope.currentFederalMarg = d3.map(scope.marginal, function(d) { return d.name; })
+                        .get("Federal")
+                        .values[dataIndex]
+                        .marginal;
+                    scope.currentProvincialMarg = d3.map(scope.marginal, function(d) { return d.name; })
+                        .get("Provincial")
+                        .values[dataIndex]
+                        .marginal;
 
                     var y0 = d3.min([owedScale(scope.currentTax), rateScale(scope.currentEff), rateScale(scope.currentMarg)]);
                     d3.select("#selectionline")

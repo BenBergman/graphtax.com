@@ -22,6 +22,8 @@ app.controller("MainController", ["$scope", "$filter", function($scope, $filter)
     $scope.currentTax = 0;
     $scope.currentEff = 0;
     $scope.currentMarg = 0;
+    $scope.currentFederalTax = 0;
+    $scope.currentProvincialTax = 0;
     $scope.currentProvince = "Manitoba";
     $scope.provinces = [
         "Alberta",

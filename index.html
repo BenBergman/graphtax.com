@@ -57,6 +57,9 @@
                         <p>
                         As you can see from the above graph, the amount of tax you pay for each income level is a fairly smooth line (see the black line). The orange line then shows the average tax rate for each dollar you earned. Much of the time this effective tax rate is more useful than your tax bracket.
                         </p>
+                        <p>
+                        Mouse over the graph and see for yourself the taxes for each income level!
+                        </p>
                     </uib-accordion-group>
                     <uib-accordion-group heading="How do tax credits and deductions affect my taxes?" is-open="accordions.credits" template-url="templates/group-template.html">
                         <p uib-popover="Refundable tax credits are very similar to the government writing you a cheque at the end of the year, regardless of what you earned or how much you owe on your taxes. If your owe $0 or $50,000 in taxes, you will receive the same benefit." popover-trigger="mouseenter">
@@ -77,8 +80,29 @@
                     </uib-accordion-group>
                     <uib-accordion-group heading="What taxes do I pay?" is-open="accordions.breakdown" template-url="templates/group-template.html">
                         <p>
-                        Lorem ipsum
+                        The taxes you pay on your income each year are broken into two main categories: Federal and Provicial. Each of these respective governments has their own tax rate which are applied on your income independently. As a result, excess credits and deductions applied to one income tax cannot be carried over to the other.
                         </p>
+                        <div class="container">
+                            <row>
+                                <div class="col-xs-4 col-xs-offset-4">Federal</div>
+                                <div class="col-xs-4">Provincial</div>
+                            </row>
+                            <row>
+                                <div class="col-xs-4">Marginal Rate</div>
+                                <div class="col-xs-4">{{ currentFederalMarg|percentage:0 }}</div>
+                                <div class="col-xs-4">{{ currentProvincialMarg|percentage:0 }}</div>
+                            </row>
+                            <row>
+                                <div class="col-xs-4">Taxes Due</div>
+                                <div class="col-xs-4">{{ currentFederalTax|currency:$:0 }}</div>
+                                <div class="col-xs-4">{{ currentProvincialTax|currency:$:0 }}</div>
+                            </row>
+                            <row>
+                                <div class="col-xs-4">Effective Rate</div>
+                                <div class="col-xs-4">{{ currentFederalEff|percentage:0 }}</div>
+                                <div class="col-xs-4">{{ currentProvincialEff|percentage:0 }}</div>
+                            </row>
+                        </div>
                     </uib-accordion-group>
                 </uib-accordion>
             </div>
