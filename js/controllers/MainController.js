@@ -1,11 +1,15 @@
 app.controller("MainController", ["$scope", "$filter", function($scope, $filter) {
     $scope.min = 0;
-    $scope.max = 100000;
+    $scope.max = 50000;
     $scope.accordions = {
         earn: false,
         credits: false,
         breakdown: true
     };
+    $scope.$watch('accordions.credits', function() {
+        $scope.calculateData();
+        $scope.renderCreditsSlow();
+    });
     $scope.$watch('accordions.breakdown', function() {
         $scope.toggleAreas($scope.accordions.breakdown);
     });

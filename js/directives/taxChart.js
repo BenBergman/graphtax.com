@@ -48,9 +48,9 @@ app.directive('taxChart', ['$window', function($window) {
 
 
                 for (var i = 0; i <= 250000; i += 100) {
-                    var tax_owed = taxes_owed(i - scope.sliders.deduction, brackets) - scope.sliders.creditRefundable;
+                    var tax_owed = taxes_owed(i - (scope.accordions.credits ? scope.sliders.deduction : 0), brackets) - (scope.accordions.credits ? scope.sliders.creditRefundable : 0);
                     if (tax_owed > 0) {
-                        tax_owed -= scope.sliders.creditNonRefundable;
+                        tax_owed -= scope.accordions.credits ? scope.sliders.creditNonRefundable : 0;
                         if (tax_owed < 0) {
                             tax_owed = 0;
                         }
@@ -59,7 +59,7 @@ app.directive('taxChart', ['$window', function($window) {
                     if (i > 0) {
                         eff_rate = tax_owed / i;
                     }
-                    var marg_rate = marginal_rate(i - scope.sliders.deduction, brackets);
+                    var marg_rate = marginal_rate(i - (scope.accordions.credits ? scope.sliders.deduction : 0), brackets);
                     if (tax_owed == 0) {
                         marg_rate = 0;
                     }
@@ -535,7 +535,7 @@ app.directive('taxChart', ['$window', function($window) {
                     .attr("d", function(d) { return marginalArea(d.values); });
             };
 
-            scope.renderCredits = function() {
+            scope.renderCredits = function(duration) {
                 var tempTax = lineGenTax(scope.data);
                 var tempEff = lineGenEff(scope.data);
                 var tempMarg = lineGenMarg(scope.data);
@@ -550,16 +550,37 @@ app.directive('taxChart', ['$window', function($window) {
                     .attr('d', tempMarg);
             };
 
+            scope.renderCreditsSlow = function() {
+                var tempTax = lineGenTax(scope.data);
+                var tempEff = lineGenEff(scope.data);
+                var tempMarg = lineGenMarg(scope.data);
+
+                d3.select('#tax')
+                    .transition()
+                    .duration(200)
+                    .attr('d', tempTax);
+
+                d3.select('#effective')
+                    .transition()
+                    .duration(200)
+                    .attr('d', tempEff);
+
+                d3.select('#marginal')
+                    .transition()
+                    .duration(200)
+                    .attr('d', tempMarg);
+            };
+
             scope.toggleAreas = function(show) {
                 if (show) {
                     svg.selectAll(".marginalLayer")
                         .transition()
-                        .delay(600)
+                        .delay(400)
                         .duration(200)
                         .style("fill-opacity", areaOpacity);
                     svg.selectAll(".effectiveLayer")
                         .transition()
-                        .delay(300)
+                        .delay(200)
                         .duration(200)
                         .style("fill-opacity", areaOpacity);
                     svg.selectAll(".taxLayer")
@@ -572,7 +593,7 @@ app.directive('taxChart', ['$window', function($window) {
                         .duration(200)
                         .style("fill-opacity", "0.0");
                 }
-            }
+            };
         }
     };
 }]);
