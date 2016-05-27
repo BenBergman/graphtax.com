@@ -106,6 +106,8 @@ app.directive('taxChart', ['$window', function($window) {
                 left: 100
             };
 
+            var areaOpacity = "0.3";
+
             var svg = d3.select(element[0])
                 .append("svg")
                 .attr("id", "directive")
@@ -339,7 +341,7 @@ app.directive('taxChart', ['$window', function($window) {
                 svg.selectAll(".marginalLayer")
                     .data(marginalLayers)
                     .enter().append("path")
-                    .attr("class", "marginalLayer")
+                    .attr("class", "layer marginalLayer")
                     .attr("d", function(d) { return marginalArea(d.values); })
                     .style("fill", function(d, i) { return color(i); })
                     .style("fill-opacity", "0.3");
@@ -348,16 +350,16 @@ app.directive('taxChart', ['$window', function($window) {
                 svg.selectAll(".effectiveLayer")
                     .data(effectiveLayers)
                     .enter().append("path")
-                    .attr("class", "effectiveLayer")
+                    .attr("class", "layer effectiveLayer")
                     .attr("d", function(d) { return effectiveArea(d.values); })
                     .style("fill", function(d, i) { return color(i); })
                     .style("fill-opacity", "0.3");
 
                 var layers = taxStack(scope.taxes);
-                svg.selectAll(".layer")
+                svg.selectAll(".taxLayer")
                     .data(layers)
                     .enter().append("path")
-                    .attr("class", "layer")
+                    .attr("class", "layer taxLayer")
                     .attr("d", function(d) { return area(d.values); })
                     .style("fill", function(d, i) { return z(i); })
                     .style("fill-opacity", "0.3");
@@ -441,7 +443,7 @@ app.directive('taxChart', ['$window', function($window) {
                 var tempEff = lineGenEff(scope.data);
                 var tempMarg = lineGenMarg(scope.data);
 
-                svg.selectAll(".layer")
+                svg.selectAll(".taxLayer")
                     .data(taxStack(scope.taxes))
                     .transition()
                     .duration(transition_time_one)
@@ -512,7 +514,7 @@ app.directive('taxChart', ['$window', function($window) {
                     .attr('d', lineGenMarg(scope.data));
 
 
-                svg.selectAll(".layer")
+                svg.selectAll(".taxLayer")
                     .data(taxStack(scope.taxes))
                     .transition()
                     .delay(transition_time_one)
@@ -547,6 +549,30 @@ app.directive('taxChart', ['$window', function($window) {
                 d3.select('#marginal')
                     .attr('d', tempMarg);
             };
+
+            scope.toggleAreas = function(show) {
+                if (show) {
+                    svg.selectAll(".marginalLayer")
+                        .transition()
+                        .delay(600)
+                        .duration(200)
+                        .style("fill-opacity", areaOpacity);
+                    svg.selectAll(".effectiveLayer")
+                        .transition()
+                        .delay(300)
+                        .duration(200)
+                        .style("fill-opacity", areaOpacity);
+                    svg.selectAll(".taxLayer")
+                        .transition()
+                        .duration(200)
+                        .style("fill-opacity", areaOpacity);
+                } else {
+                    svg.selectAll(".layer")
+                        .transition()
+                        .duration(200)
+                        .style("fill-opacity", "0.0");
+                }
+            }
         }
     };
 }]);

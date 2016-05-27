@@ -6,7 +6,9 @@ app.controller("MainController", ["$scope", "$filter", function($scope, $filter)
         credits: false,
         breakdown: true
     };
-    $scope.$watch('accordions.earn', function() { console.log('wut wut!'); });
+    $scope.$watch('accordions.breakdown', function() {
+        $scope.toggleAreas($scope.accordions.breakdown);
+    });
     $scope.sliders = {
         "creditRefundable": 0,
         "creditNonRefundable": 0,
