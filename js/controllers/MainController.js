@@ -121,7 +121,6 @@ app.controller("MainController", ["$scope", "$filter", function($scope, $filter)
                 [Infinity, 0.2575]
             ],
             "personalAmount": [
-                // TODO: Why is the rate higher than the income bracket...? Is this related to the Fed amount scaling?
                 [11550, 0.20]
             ]
         },

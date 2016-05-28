@@ -47,7 +47,8 @@ app.directive('taxChart', ['$window', function($window) {
 
 
                 for (var i = 0; i <= 250000; i += 100) {
-                    var tax_owed = taxes_owed(i - (scope.accordions.credits ? scope.sliders.deduction : 0), brackets) - (scope.accordions.credits ? scope.sliders.creditRefundable : 0);
+                    var tax_owed = taxes_owed(i - (scope.accordions.credits ? scope.sliders.deduction : 0), fed_bracket) - (scope.accordions.credits ? scope.sliders.creditRefundable : 0);
+                    tax_owed += taxes_owed(i - (scope.accordions.credits ? scope.sliders.deduction : 0), prov_bracket) - (scope.accordions.credits ? scope.sliders.creditRefundable : 0);
                     if (tax_owed > 0) {
                         tax_owed -= scope.accordions.credits ? scope.sliders.creditNonRefundable : 0;
                         if (tax_owed < 0) {
@@ -68,6 +69,7 @@ app.directive('taxChart', ['$window', function($window) {
                         "Effective Rate": eff_rate,
                         "Marginal Rate": marg_rate
                     });
+
                     d3.map(scope.taxes, function(d) { return d.name; }).get("Federal").values.push({
                         "income": i,
                         "tax": taxes_owed(i, fed_bracket),
@@ -76,6 +78,7 @@ app.directive('taxChart', ['$window', function($window) {
                         "income": i,
                         "tax": taxes_owed(i, prov_bracket),
                     });
+
                     d3.map(scope.effective, function(d) { return d.name; }).get("Federal").values.push({
                         "income": i,
                         "effective": effective_rate(i, fed_bracket),
@@ -84,6 +87,7 @@ app.directive('taxChart', ['$window', function($window) {
                         "income": i,
                         "effective": effective_rate(i, prov_bracket),
                     });
+
                     d3.map(scope.marginal, function(d) { return d.name; }).get("Federal").values.push({
                         "income": i,
                         "marginal": marginal_rate(i, fed_bracket),

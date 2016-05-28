@@ -98,14 +98,15 @@ function taxes_owed(income, brackets) {
         }
     }
 
-    return owed;
+    return owed < 0 ? 0 : owed;
 }
 
 
 function marginal_rate(income, brackets) {
     for (var i in brackets) {
         if (income < brackets[i][0]) {
-            return brackets[i][1];
+            var rate = brackets[i][1];
+            return rate < 0 ? 0 : rate;
         }
     }
 
@@ -117,5 +118,6 @@ function effective_rate(income, brackets) {
     if (income === 0) {
         return 0;
     }
-    return taxes_owed(income, brackets) / income;
+    var rate = taxes_owed(income, brackets) / income;
+    return rate < 0 ? 0 : rate;
 }
