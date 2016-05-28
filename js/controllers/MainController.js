@@ -63,6 +63,7 @@ app.controller("MainController", ["$scope", "$filter", function($scope, $filter)
             ]
         },
         "Alberta": {
+            "abatement": 0.0,
             "income": [
                 [125000, 0.10],
                 [150000, 0.12],
@@ -75,6 +76,7 @@ app.controller("MainController", ["$scope", "$filter", function($scope, $filter)
             ]
         },
         "British Columbia": {
+            "abatement": 0.0,
             "income": [
                 [38210, 0.0506],
                 [76421, 0.0770],
@@ -87,6 +89,7 @@ app.controller("MainController", ["$scope", "$filter", function($scope, $filter)
             ]
         },
         "Manitoba": {
+            "abatement": 0.0,
             "income": [
                 [31000, 0.1080],
                 [67000, 0.1275],
@@ -97,6 +100,7 @@ app.controller("MainController", ["$scope", "$filter", function($scope, $filter)
             ]
         },
         "Ontario": {
+            "abatement": 0.0,
             "income": [
                 [41536, 0.0505],
                 [83075, 0.0915],
@@ -109,6 +113,7 @@ app.controller("MainController", ["$scope", "$filter", function($scope, $filter)
             ]
         },
         "Quebec": {
+            "abatement": 0.165,
             "income": [
                 [42390, 0.1600],
                 [84780, 0.2000],
@@ -121,6 +126,7 @@ app.controller("MainController", ["$scope", "$filter", function($scope, $filter)
             ]
         },
         "Saskatchewan": {
+            "abatement": 0.0,
             "income": [
                 [44601, 0.11],
                 [127430, 0.13],
@@ -131,6 +137,7 @@ app.controller("MainController", ["$scope", "$filter", function($scope, $filter)
             ]
         },
         "New Brunswick": {
+            "abatement": 0.0,
             "income": [
                 [40492, 0.0968],
                 [80985, 0.1482],
@@ -143,6 +150,7 @@ app.controller("MainController", ["$scope", "$filter", function($scope, $filter)
             ]
         },
         "Newfoundland & Labrador": {
+            "abatement": 0.0,
             "income": [
                 [35148, 0.0820],
                 [70295, 0.1350],
@@ -155,6 +163,7 @@ app.controller("MainController", ["$scope", "$filter", function($scope, $filter)
             ]
         },
         "Nova Scotia": {
+            "abatement": 0.0,
             "income": [
                 [29590, 0.0879],
                 [59180, 0.1495],
@@ -167,6 +176,7 @@ app.controller("MainController", ["$scope", "$filter", function($scope, $filter)
             ]
         },
         "Prince Edward Island": {
+            "abatement": 0.0,
             "income": [
                 [31984, 0.098],
                 [63969, 0.138],
@@ -177,6 +187,7 @@ app.controller("MainController", ["$scope", "$filter", function($scope, $filter)
             ]
         },
         "Northwest Territories": {
+            "abatement": 0.0,
             "income": [
                 [41011, 0.0590],
                 [82024, 0.0860],
@@ -188,6 +199,7 @@ app.controller("MainController", ["$scope", "$filter", function($scope, $filter)
             ]
         },
         "Nunavut": {
+            "abatement": 0.0,
             "income": [
                 [43176, 0.040],
                 [86351, 0.070],
@@ -199,6 +211,7 @@ app.controller("MainController", ["$scope", "$filter", function($scope, $filter)
             ]
         },
         "Yukon": {
+            "abatement": 0.0,
             "income": [
                 [45282, 0.064],
                 [90563, 0.090],

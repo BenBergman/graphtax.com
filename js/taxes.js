@@ -75,6 +75,15 @@ function subtract_brackets(a, b) {
 }
 
 
+function bracket_mult(brackets, x) {
+    var result = [];
+    for (var i in brackets) {
+        result.push([brackets[i][0], brackets[i][1] * x]);
+    }
+    return result;
+}
+
+
 function taxes_owed(income, brackets) {
     var owed = 0;
     var lower_end = 0;
