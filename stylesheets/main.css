@@ -11,8 +11,16 @@
 
 .main {
 	margin-top: 20px;
-	font: 1.5em sans-serif;
+	font: 1em sans-serif;
 	color: #404040;
+}
+
+.main .label {
+	font: 1.5em sans-serif;
+}
+
+.main .readout {
+	font: 1.2em sans-serif;
 }
 
 .main input {
