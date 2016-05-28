@@ -101,27 +101,32 @@
                         <p>
                         The taxes you pay on your income each year are broken into two main categories: Federal and Provicial. Each of these respective governments has their own tax rate which are applied on your income independently. As a result, excess credits and deductions applied to one income tax cannot be carried over to the other.
                         </p>
-                        <div class="container">
-                            <row>
-                                <div class="col-xs-4 col-xs-offset-4">Federal</div>
-                                <div class="col-xs-4">Provincial</div>
-                            </row>
-                            <row>
-                                <div class="col-xs-4">Marginal Rate</div>
-                                <div class="col-xs-4">{{ currentFederalMarg|percentage:0 }}</div>
-                                <div class="col-xs-4">{{ currentProvincialMarg|percentage:0 }}</div>
-                            </row>
-                            <row>
-                                <div class="col-xs-4">Taxes Due</div>
-                                <div class="col-xs-4">{{ currentFederalTax|currency:$:0 }}</div>
-                                <div class="col-xs-4">{{ currentProvincialTax|currency:$:0 }}</div>
-                            </row>
-                            <row>
-                                <div class="col-xs-4">Effective Rate</div>
-                                <div class="col-xs-4">{{ currentFederalEff|percentage:0 }}</div>
-                                <div class="col-xs-4">{{ currentProvincialEff|percentage:0 }}</div>
-                            </row>
-                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Federal</th>
+                                    <th>Provincial</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>Marginal Rate</th>
+                                    <td>{{ currentFederalMarg|percentage:0 }}</td>
+                                    <td>{{ currentProvincialMarg|percentage:0 }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Taxes Due</th>
+                                    <td>{{ currentFederalTax|currency:$:0 }}</td>
+                                    <td>{{ currentProvincialTax|currency:$:0 }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Effective Rate</th>
+                                    <td>{{ currentFederalEff|percentage:0 }}</td>
+                                    <td>{{ currentProvincialEff|percentage:0 }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </uib-accordion-group>
                 </uib-accordion>
             </div>
