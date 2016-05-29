@@ -365,25 +365,46 @@ app.directive('taxChart', ['$window', function($window) {
                     var minDistance = Math.min(owedDistance, effDistance, margDistance);
 
                     if (scope.accordions.breakdown) {
+                        svg.selectAll(".line")
+                            .transition()
+                            .duration(100)
+                            .attr('stroke-width', 2);
+
                         svg.selectAll(".layer")
                             .transition()
                             .duration(100)
                             .style("fill-opacity", "0.1");
+
                         if (owedDistance == minDistance) {
                             svg.selectAll(".taxLayer")
                                 .transition()
                                 .duration(100)
                                 .style("fill-opacity", "0.7");
+
+                            svg.select("#tax")
+                                .transition()
+                                .duration(100)
+                                .attr('stroke-width', 5);
                         } else if (effDistance == minDistance) {
                             svg.selectAll(".effectiveLayer")
                                 .transition()
                                 .duration(100)
                                 .style("fill-opacity", "0.7");
+
+                            svg.select("#effective")
+                                .transition()
+                                .duration(100)
+                                .attr('stroke-width', 5);
                         } else if (margDistance == minDistance) {
                             svg.selectAll(".marginalLayer")
                                 .transition()
                                 .duration(100)
                                 .style("fill-opacity", "0.7");
+
+                            svg.select("#marginal")
+                                .transition()
+                                .duration(100)
+                                .attr('stroke-width', 5);
                         }
                     }
                 } else {
@@ -398,6 +419,10 @@ app.directive('taxChart', ['$window', function($window) {
                             .duration(100)
                             .style("fill-opacity", "0.3");
 
+                        svg.selectAll(".line")
+                            .transition()
+                            .duration(100)
+                            .attr('stroke-width', 2);
                     }
                 }
                 scope.$apply();
@@ -439,18 +464,21 @@ app.directive('taxChart', ['$window', function($window) {
             function draw_data() {
                 svg.append('svg:path')
                     .attr('id', 'marginal')
+                    .attr('class', 'line')
                     .attr('d', lineGenMarg(scope.data))
                     .attr('stroke', color("Marginal Rate"))
                     .attr('stroke-width', 2)
                     .attr('fill', 'none');
                 svg.append('svg:path')
                     .attr('id', 'effective')
+                    .attr('class', 'line')
                     .attr('d', lineGenEff(scope.data))
                     .attr('stroke', color("Effective Rate"))
                     .attr('stroke-width', 2)
                     .attr('fill', 'none');
                 svg.append('svg:path')
                     .attr('id', 'tax')
+                    .attr('class', 'line')
                     .attr('d', lineGenTax(scope.data))
                     .attr('stroke', color("Tax"))
                     .attr('stroke-width', 2)
