@@ -330,13 +330,14 @@ app.directive('taxChart', ['$window', function($window) {
                         .values[dataIndex]
                         .marginal;
 
-                    var y0 = d3.min([owedScale(scope.currentTax), rateScale(scope.currentEff), rateScale(scope.currentMarg)]);
+                    var y1 = d3.min([owedScale(scope.currentTax), rateScale(scope.currentEff), rateScale(scope.currentMarg)]);
+                    var y2 = d3.max([owedScale(scope.currentTax), rateScale(scope.currentEff), rateScale(scope.currentMarg)]);
                     d3.select("#selectionline")
                         .attr({
                             "x1": x,
                             "x2": x,
-                            "y1": y0,
-                            "y2": height - margins.bottom,
+                            "y1": y1,
+                            "y2": Math.max(y2, height - margins.bottom),
                         });
 
                     var owedPos = owedScale(scope.currentTax);
