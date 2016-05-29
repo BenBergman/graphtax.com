@@ -339,27 +339,66 @@ app.directive('taxChart', ['$window', function($window) {
                             "y2": height - margins.bottom,
                         });
 
+                    var owedPos = owedScale(scope.currentTax);
+                    var effPos = rateScale(scope.currentEff);
+                    var margPos = rateScale(scope.currentMarg);
+
                     d3.select("#taxPoint")
                         .attr("fill", "white")
                         .attr("stroke", color("Tax"))
                         .attr("cx", x)
-                        .attr("cy", owedScale(scope.currentTax));
+                        .attr("cy", owedPos);
                     d3.select("#effectivePoint")
                         .attr("fill", "white")
                         .attr("stroke", color("Effective Rate"))
                         .attr("cx", x)
-                        .attr("cy", rateScale(scope.currentEff));
+                        .attr("cy", effPos);
                     d3.select("#marginalPoint")
                         .attr("fill", "white")
                         .attr("stroke", color("Marginal Rate"))
                         .attr("cx", x)
-                        .attr("cy", rateScale(scope.currentMarg));
+                        .attr("cy", margPos);
+
+                    var owedDistance = Math.abs(y - owedPos);
+                    var effDistance = Math.abs(y - effPos);
+                    var margDistance = Math.abs(y - margPos);
+                    var minDistance = Math.min(owedDistance, effDistance, margDistance);
+
+                    if (scope.accordions.breakdown) {
+                        svg.selectAll(".layer")
+                            .transition()
+                            .duration(100)
+                            .style("fill-opacity", "0.1");
+                        if (owedDistance == minDistance) {
+                            svg.selectAll(".taxLayer")
+                                .transition()
+                                .duration(100)
+                                .style("fill-opacity", "0.7");
+                        } else if (effDistance == minDistance) {
+                            svg.selectAll(".effectiveLayer")
+                                .transition()
+                                .duration(100)
+                                .style("fill-opacity", "0.7");
+                        } else if (margDistance == minDistance) {
+                            svg.selectAll(".marginalLayer")
+                                .transition()
+                                .duration(100)
+                                .style("fill-opacity", "0.7");
+                        }
+                    }
                 } else {
                     mouseOnGraph = false;
                     d3.select("#selectionline").remove();
                     d3.select("#taxPoint").remove();
                     d3.select("#effectivePoint").remove();
                     d3.select("#marginalPoint").remove();
+                    if (scope.accordions.breakdown) {
+                        svg.selectAll(".layer")
+                            .transition()
+                            .duration(100)
+                            .style("fill-opacity", "0.3");
+
+                    }
                 }
                 scope.$apply();
             };
