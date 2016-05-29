@@ -430,7 +430,7 @@ app.directive('taxChart', ['$window', function($window) {
 
 
             function draw_areas() {
-                var z = d3.scale.category20c();
+                var z = d3.scale.category20c().domain([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
 
                 var marginalLayers = marginalStack(scope.marginal);
                 svg.selectAll(".marginalLayer")
@@ -438,7 +438,7 @@ app.directive('taxChart', ['$window', function($window) {
                     .enter().append("path")
                     .attr("class", "layer marginalLayer")
                     .attr("d", function(d) { return marginalArea(d.values); })
-                    .style("fill", function(d, i) { return color(i); })
+                    .style("fill", function(d, i) { return z(i + 8); })
                     .style("fill-opacity", "0.3");
 
                 var effectiveLayers = effectiveStack(scope.effective);
@@ -447,7 +447,7 @@ app.directive('taxChart', ['$window', function($window) {
                     .enter().append("path")
                     .attr("class", "layer effectiveLayer")
                     .attr("d", function(d) { return effectiveArea(d.values); })
-                    .style("fill", function(d, i) { return color(i); })
+                    .style("fill", function(d, i) { return z(i + 4); })
                     .style("fill-opacity", "0.3");
 
                 var layers = taxStack(scope.taxes);
