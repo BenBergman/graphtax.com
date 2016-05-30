@@ -1,4 +1,4 @@
-app.controller("MainController", ["$scope", "$filter", function($scope, $filter) {
+app.controller("MainController", ["$scope", "$uibModal", "$filter", function($scope, $uibModal, $filter) {
     $scope.min = 0;
     $scope.max = 50000;
     $scope.accordions = {
@@ -238,5 +238,17 @@ app.controller("MainController", ["$scope", "$filter", function($scope, $filter)
     $scope.$watch('sliders.deduction', $scope.changeCreditsAndDeductions);
     $scope.sliderFormat = function(value) {
         return $filter('currency')(value, '$', 0);
-    }
+    };
+    $scope.openDonate = function() {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'templates/donate-modal.html',
+            controller: 'ModalInstanceCtrl',
+        });
+
+        modalInstance.result.then(function(returnValue) {
+            console.log('Returned: ' + returnValue);
+        }, function() {
+            console.log('Cancelled');
+        })
+    };
 }]);

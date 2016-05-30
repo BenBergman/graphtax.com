@@ -9,6 +9,11 @@ body {
 	margin-top: -20px;
 }
 
+.navbar-nav>li>a.btn-success {
+    color: white;
+	font-weight: bold;
+}
+
 .footer {
 	position: absolute;
 	bottom: 0;
