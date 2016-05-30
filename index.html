@@ -1,152 +1,152 @@
 <html lang="en">
- 
-<head>
-    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
- 
-    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="http://getbootstrap.com/dist/js/bootstrap.min.js" charset="utf-8"></script>
-    <link href="stylesheets/main.css" rel="stylesheet">
- 
-    <link href="http://getbootstrap.com/examples/justified-nav/justified-nav.css" rel="stylesheet">
- 
-    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js" charset="utf-8"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.js" charset="utf-8"></script>
-    <script src="js/taxes.js" charset="utf-8"></script>
 
-    <link rel="stylesheet" href="angular_ui/ui-bootstrap-custom-1.3.3-csp.css">
-    <script src="angular_ui/ui-bootstrap-custom-tpls-1.3.3.min.js"></script>
+	<head>
+		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 
-    <link rel="stylesheet" href="bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.min.css">
-    <script src="bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.min.js"></script>
-    <script src="bower_components/angular-bootstrap-slider/slider.js"></script>
+		<link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<script src="http://getbootstrap.com/dist/js/bootstrap.min.js" charset="utf-8"></script>
+		<link href="stylesheets/main.css" rel="stylesheet">
 
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
-</head>
- 
-<body ng-app="myApp" ng-controller="MainController">
-    <script src="js/app.js"></script>
-    <script src="js/controllers/MainController.js"></script>
-    <script src="js/controllers/ModalInstanceCtrl.js"></script>
-    <script src="js/directives/taxChart.js"></script>
+		<link href="http://getbootstrap.com/examples/justified-nav/justified-nav.css" rel="stylesheet">
 
-    <nav class="navbar navbar-default">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">Graph Tax</a>
-            </div>
-            <div id="navbar" class="collapse navbar-collapse">
-                <ul class="nav navbar-nav">
-                    <li class="dropdown" uib-dropdown>
-                        <a role="button" class="dropdown-toggle" uib-dropdown-toggle>
-                            Current Province: {{ currentProvince }} <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li ng-repeat="province in provinces" role="menuitem">
-                                <a href ng-click="changeProvince(province)">{{ province }}</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a role="button" type="button" class="btn btn-success" ng-click="openDonate()">Donate!</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js" charset="utf-8"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.js" charset="utf-8"></script>
+		<script src="js/taxes.js" charset="utf-8"></script>
+
+		<link rel="stylesheet" href="angular_ui/ui-bootstrap-custom-1.3.3-csp.css">
+		<script src="angular_ui/ui-bootstrap-custom-tpls-1.3.3.min.js"></script>
+
+		<link rel="stylesheet" href="bower_components/seiyria-bootstrap-slider/dist/css/bootstrap-slider.min.css">
+		<script src="bower_components/seiyria-bootstrap-slider/dist/bootstrap-slider.min.js"></script>
+		<script src="bower_components/angular-bootstrap-slider/slider.js"></script>
+
+		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+	</head>
+
+	<body ng-app="myApp" ng-controller="MainController">
+		<script src="js/app.js"></script>
+		<script src="js/controllers/MainController.js"></script>
+		<script src="js/controllers/ModalInstanceCtrl.js"></script>
+		<script src="js/directives/taxChart.js"></script>
+
+		<nav class="navbar navbar-default">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#">Graph Tax</a>
+				</div>
+				<div id="navbar" class="collapse navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li class="dropdown" uib-dropdown>
+							<a role="button" class="dropdown-toggle" uib-dropdown-toggle>
+								Current Province: {{ currentProvince }} <span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li ng-repeat="province in provinces" role="menuitem">
+									<a href ng-click="changeProvince(province)">{{ province }}</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li>
+							<a role="button" type="button" class="btn btn-success" ng-click="openDonate()">Donate!</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
 
 
-    <div class="container">
-        <div class="main">
-            <div class="row">
-                <div class="col-md-12" tax-chart></div>
-            </div>
-            <div class="row readout">
-                <p class="col-md-3">Total Income: {{ currentIncome|currency:$:0 }}</p>
-                <p class="col-md-3" uib-popover="The amount of tax you owe on the next dollar that you earn. For example, if you earned $50,000 and are in the 33% tax bracket and you earn an additional $100, you will pay 33% tax on that $100. This rate does not necessarily apply to the previous $50,000." popover-trigger="mouseenter"><font color="green">Marginal Tax Rate<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>: {{ currentMarg|percentage:0 }}</font></p>
-                <p class="col-md-3"><font color="blue">Total Taxes Due: {{ currentTax|currency:$:0 }}</font></p>
-                <p class="col-md-3" uib-popover="The average tax rate you pay for each dollar you earn." popover-trigger="mouseenter"><font color="orange">Effective Tax Rate<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>: {{ currentEff|percentage:0 }}</font></p>
-            </div>
+		<div class="container">
+			<div class="main">
+				<div class="row">
+					<div class="col-md-12" tax-chart></div>
+				</div>
+				<div class="row readout">
+					<p class="col-md-3">Total Income: {{ currentIncome|currency:$:0 }}</p>
+					<p class="col-md-3" uib-popover="The amount of tax you owe on the next dollar that you earn. For example, if you earned $50,000 and are in the 33% tax bracket and you earn an additional $100, you will pay 33% tax on that $100. This rate does not necessarily apply to the previous $50,000." popover-trigger="mouseenter"><font color="green">Marginal Tax Rate<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>: {{ currentMarg|percentage:0 }}</font></p>
+					<p class="col-md-3"><font color="blue">Total Taxes Due: {{ currentTax|currency:$:0 }}</font></p>
+					<p class="col-md-3" uib-popover="The average tax rate you pay for each dollar you earn." popover-trigger="mouseenter"><font color="orange">Effective Tax Rate<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>: {{ currentEff|percentage:0 }}</font></p>
+				</div>
 
-            <div class="row">
-                <uib-accordion>
-                    <uib-accordion-group heading="What happens if I earn more money?" is-open="accordions.earn" template-url="templates/group-template.html">
-                        <p>
-                        Cangratulations! Earning more money means more money in your pocket. When you earn more money, your position in the above graph will move over to the right. Sometimes this will mean you enter a new tax bracket (ie. cross a jump on the green line). Don't worry though; this new tax bracket only applies to the money you earn while you stay in this bracket! While it is generally true that you get to keep less of the money you earn while in the higher tax brackets, the amount you get too keep from the money earned in the lower brackets will not be affected.
-                        </p>
-                        <p>
-                        As you can see from the above graph, the amount of tax you pay for each income level is a fairly smooth line (see the blue line). The orange line then shows the average tax rate for each dollar you earned. Much of the time this effective tax rate is more useful than your tax bracket.
-                        </p>
-                        <p>
-                        Mouse over the graph and see for yourself the taxes for each income level!
-                        </p>
-                    </uib-accordion-group>
-                    <uib-accordion-group heading="How do tax credits and deductions affect my taxes?" is-open="accordions.credits" template-url="templates/group-template.html">
-                        <p uib-popover="Refundable tax credits are very similar to the government writing you a cheque at the end of the year, regardless of what you earned or how much you owe on your taxes. If your owe $0 or $50,000 in taxes, you will receive the same benefit." popover-trigger="mouseenter">
-                            Credits (Refundable)<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>:
-                        </p>
-                        <slider ng-model="sliders.creditRefundable" formatter="sliderFormat(value)" min="min" max="max"></slider>
-                        <p uib-popover="Non-refundable tax credits can only cancel out other taxes that you owe. You will only receive a benefit if you otherwise owe money for taxes." popover-trigger="mouseenter">
-                            Credits (Non-refundable)<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>:
-                        </p>
-                        <slider ng-model="sliders.creditNonRefundable" formatter="sliderFormat(value)" min="min" max="max"></slider>
-                        <p uib-popover="Tax deductions effectively reduce the amount of your income for the year that gets taxed." popover-trigger="mouseenter">
-                            Deductions<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>:
-                        </p>
-                        <slider ng-model="sliders.deduction" formatter="sliderFormat(value)" min="min" max="max"></slider>
-                        <button class="btn btn-default" ng-click="sliders.creditRefundable = 0; sliders.creditNonRefundable = 0; sliders.deduction = 0">
-                            Reset
-                        </button>
-                    </uib-accordion-group>
-                    <uib-accordion-group heading="What taxes do I pay?" is-open="accordions.breakdown" template-url="templates/group-template.html">
-                        <p>
-                        The taxes you pay on your income each year are broken into two main categories: Federal and Provicial. Each of these respective governments has their own tax rate which are applied on your income independently. As a result, excess credits and deductions applied to one income tax cannot be carried over to the other.
-                        </p>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>Federal</th>
-                                    <th>Provincial</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th>Marginal Rate</th>
-                                    <td>{{ currentFederalMarg|percentage:0 }}</td>
-                                    <td>{{ currentProvincialMarg|percentage:0 }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Taxes Due</th>
-                                    <td>{{ currentFederalTax|currency:$:0 }}</td>
-                                    <td>{{ currentProvincialTax|currency:$:0 }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Effective Rate</th>
-                                    <td>{{ currentFederalEff|percentage:0 }}</td>
-                                    <td>{{ currentProvincialEff|percentage:0 }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </uib-accordion-group>
-                </uib-accordion>
-            </div>
-        </div>
-    </div>
+				<div class="row">
+					<uib-accordion>
+						<uib-accordion-group heading="What happens if I earn more money?" is-open="accordions.earn" template-url="templates/group-template.html">
+							<p>
+							Cangratulations! Earning more money means more money in your pocket. When you earn more money, your position in the above graph will move over to the right. Sometimes this will mean you enter a new tax bracket (ie. cross a jump on the green line). Don't worry though; this new tax bracket only applies to the money you earn while you stay in this bracket! While it is generally true that you get to keep less of the money you earn while in the higher tax brackets, the amount you get too keep from the money earned in the lower brackets will not be affected.
+							</p>
+							<p>
+							As you can see from the above graph, the amount of tax you pay for each income level is a fairly smooth line (see the blue line). The orange line then shows the average tax rate for each dollar you earned. Much of the time this effective tax rate is more useful than your tax bracket.
+							</p>
+							<p>
+							Mouse over the graph and see for yourself the taxes for each income level!
+							</p>
+						</uib-accordion-group>
+						<uib-accordion-group heading="How do tax credits and deductions affect my taxes?" is-open="accordions.credits" template-url="templates/group-template.html">
+							<p uib-popover="Refundable tax credits are very similar to the government writing you a cheque at the end of the year, regardless of what you earned or how much you owe on your taxes. If your owe $0 or $50,000 in taxes, you will receive the same benefit." popover-trigger="mouseenter">
+							Credits (Refundable)<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>:
+							</p>
+							<slider ng-model="sliders.creditRefundable" formatter="sliderFormat(value)" min="min" max="max"></slider>
+							<p uib-popover="Non-refundable tax credits can only cancel out other taxes that you owe. You will only receive a benefit if you otherwise owe money for taxes." popover-trigger="mouseenter">
+							Credits (Non-refundable)<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>:
+							</p>
+							<slider ng-model="sliders.creditNonRefundable" formatter="sliderFormat(value)" min="min" max="max"></slider>
+							<p uib-popover="Tax deductions effectively reduce the amount of your income for the year that gets taxed." popover-trigger="mouseenter">
+							Deductions<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>:
+							</p>
+							<slider ng-model="sliders.deduction" formatter="sliderFormat(value)" min="min" max="max"></slider>
+							<button class="btn btn-default" ng-click="sliders.creditRefundable = 0; sliders.creditNonRefundable = 0; sliders.deduction = 0">
+								Reset
+							</button>
+						</uib-accordion-group>
+						<uib-accordion-group heading="What taxes do I pay?" is-open="accordions.breakdown" template-url="templates/group-template.html">
+							<p>
+							The taxes you pay on your income each year are broken into two main categories: Federal and Provicial. Each of these respective governments has their own tax rate which are applied on your income independently. As a result, excess credits and deductions applied to one income tax cannot be carried over to the other.
+							</p>
+							<table class="table">
+								<thead>
+									<tr>
+										<th></th>
+										<th>Federal</th>
+										<th>Provincial</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th>Marginal Rate</th>
+										<td>{{ currentFederalMarg|percentage:0 }}</td>
+										<td>{{ currentProvincialMarg|percentage:0 }}</td>
+									</tr>
+									<tr>
+										<th>Taxes Due</th>
+										<td>{{ currentFederalTax|currency:$:0 }}</td>
+										<td>{{ currentProvincialTax|currency:$:0 }}</td>
+									</tr>
+									<tr>
+										<th>Effective Rate</th>
+										<td>{{ currentFederalEff|percentage:0 }}</td>
+										<td>{{ currentProvincialEff|percentage:0 }}</td>
+									</tr>
+								</tbody>
+							</table>
+						</uib-accordion-group>
+					</uib-accordion>
+				</div>
+			</div>
+		</div>
 
-    <footer class="footer">
-        <div class="container">
-			<p class="text-muted">Numbers in chart include 2016 <a href="http://www.cra-arc.gc.ca/tx/ndvdls/fq/txrts-eng.html">Federal and Provincial income taxes</a> in addition to <a href="http://www.cra-arc.gc.ca/tx/ndvdls/tpcs/ncm-tx/rtrn/cmpltng/ddctns/lns300-350/300-eng.html">Federal and Provincial basic personal amount tax credits</a>. No other amounts are included (CPP, EI, surtaxes, etc.). All numbers are approximate and are provided for informational purposes only.</p>
-        </div>
-    </footer>
-</body>
+		<footer class="footer">
+			<div class="container">
+				<p class="text-muted">Numbers in chart include 2016 <a href="http://www.cra-arc.gc.ca/tx/ndvdls/fq/txrts-eng.html">Federal and Provincial income taxes</a> in addition to <a href="http://www.cra-arc.gc.ca/tx/ndvdls/tpcs/ncm-tx/rtrn/cmpltng/ddctns/lns300-350/300-eng.html">Federal and Provincial basic personal amount tax credits</a>. No other amounts are included (CPP, EI, surtaxes, etc.). All numbers are approximate and are provided for informational purposes only.</p>
+			</div>
+		</footer>
+	</body>
 </html>
