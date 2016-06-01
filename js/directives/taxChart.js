@@ -137,6 +137,7 @@ app.directive('taxChart', ['$window', function($window) {
                     .scale(incomeScale)
                     .tickFormat(d3.format("$s"))
                     .innerTickSize(margins.top + margins.bottom - height)
+                    .tickPadding(10)
                     .orient("bottom"),
                 owedAxis = d3.svg.axis()
                     .scale(owedScale)
@@ -146,6 +147,7 @@ app.directive('taxChart', ['$window', function($window) {
                     .scale(rateScale)
                     .tickFormat(d3.format("%"))
                     .innerTickSize(margins.right + margins.left - width)
+                    .tickPadding(10)
                     .orient("left");
 
             var taxStack = d3.layout.stack()
