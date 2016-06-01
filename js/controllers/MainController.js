@@ -33,8 +33,8 @@ app.controller("MainController", ["$scope", "$uibModal", "$filter", function($sc
     $scope.currentFederalEff = 0;
     $scope.currentProvincialEff = 0;
 
-    $scope.currentProvince = "California";
-    $scope.provinces = [
+    $scope.currentRegion = "California";
+    $scope.regions = [
         "Alabama",
         "Alaska",
         "Arizona",
@@ -724,8 +724,8 @@ app.controller("MainController", ["$scope", "$uibModal", "$filter", function($sc
         },
     };
     $scope.data = [];
-    $scope.changeProvince = function(province) {
-        $scope.currentProvince = province;
+    $scope.changeRegion = function(region) {
+        $scope.currentRegion = region;
         $scope.calculateData();
         $scope.render();
     };

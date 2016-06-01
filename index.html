@@ -67,11 +67,11 @@
 					<ul class="nav navbar-nav">
 						<li class="dropdown" uib-dropdown>
 							<a role="button" class="dropdown-toggle" uib-dropdown-toggle>
-								Current Province: {{ currentProvince }} <span class="caret"></span>
+								{{ currentRegion }} <span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
-								<li ng-repeat="province in provinces" role="menuitem">
-									<a href ng-click="changeProvince(province)">{{ province }}</a>
+								<li ng-repeat="region in regions" role="menuitem">
+									<a href ng-click="changeRegion(region)">{{ region }}</a>
 								</li>
 							</ul>
 						</li>

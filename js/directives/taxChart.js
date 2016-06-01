@@ -3,11 +3,11 @@ app.directive('taxChart', ['$window', function($window) {
         restrict: 'EA',
         link: function(scope, element, attrs) {
             scope.calculateData = function() {
-                var fed_bracket = subtract_brackets(scope.rawBrackets.Federal.income, scope.rawBrackets.Federal.personalAmount);
-                fed_bracket = bracket_mult(fed_bracket, 1 - scope.rawBrackets[scope.currentProvince].abatement)
-                var prov_bracket = subtract_brackets(scope.rawBrackets[scope.currentProvince].income, scope.rawBrackets[scope.currentProvince].personalAmount);
+                var federal_bracket = subtract_brackets(scope.rawBrackets.Federal.income, scope.rawBrackets.Federal.personalAmount);
+                federal_bracket = bracket_mult(federal_bracket, 1 - scope.rawBrackets[scope.currentRegion].abatement)
+                var regional_bracket = subtract_brackets(scope.rawBrackets[scope.currentRegion].income, scope.rawBrackets[scope.currentRegion].personalAmount);
 
-                var brackets = add_brackets(fed_bracket, prov_bracket);
+                var brackets = add_brackets(federal_bracket, regional_bracket);
 
 
                 scope.data = [];
@@ -47,8 +47,8 @@ app.directive('taxChart', ['$window', function($window) {
 
 
                 for (var i = 0; i <= 250000; i += 100) {
-                    var tax_owed = taxes_owed(i - (scope.accordions.credits ? scope.sliders.deduction : 0), fed_bracket);
-                    tax_owed += taxes_owed(i - (scope.accordions.credits ? scope.sliders.deduction : 0), prov_bracket);
+                    var tax_owed = taxes_owed(i - (scope.accordions.credits ? scope.sliders.deduction : 0), federal_bracket);
+                    tax_owed += taxes_owed(i - (scope.accordions.credits ? scope.sliders.deduction : 0), regional_bracket);
                     tax_owed -= (scope.accordions.credits ? scope.sliders.creditRefundable : 0);
                     if (tax_owed > 0) {
                         tax_owed -= scope.accordions.credits ? scope.sliders.creditNonRefundable : 0;
@@ -73,29 +73,29 @@ app.directive('taxChart', ['$window', function($window) {
 
                     d3.map(scope.taxes, function(d) { return d.name; }).get("Federal").values.push({
                         "income": i,
-                        "tax": taxes_owed(i, fed_bracket),
+                        "tax": taxes_owed(i, federal_bracket),
                     });
                     d3.map(scope.taxes, function(d) { return d.name; }).get("Provincial").values.push({
                         "income": i,
-                        "tax": taxes_owed(i, prov_bracket),
+                        "tax": taxes_owed(i, regional_bracket),
                     });
 
                     d3.map(scope.effective, function(d) { return d.name; }).get("Federal").values.push({
                         "income": i,
-                        "effective": effective_rate(i, fed_bracket),
+                        "effective": effective_rate(i, federal_bracket),
                     });
                     d3.map(scope.effective, function(d) { return d.name; }).get("Provincial").values.push({
                         "income": i,
-                        "effective": effective_rate(i, prov_bracket),
+                        "effective": effective_rate(i, regional_bracket),
                     });
 
                     d3.map(scope.marginal, function(d) { return d.name; }).get("Federal").values.push({
                         "income": i,
-                        "marginal": marginal_rate(i, fed_bracket),
+                        "marginal": marginal_rate(i, federal_bracket),
                     });
                     d3.map(scope.marginal, function(d) { return d.name; }).get("Provincial").values.push({
                         "income": i,
-                        "marginal": marginal_rate(i, prov_bracket),
+                        "marginal": marginal_rate(i, regional_bracket),
                     });
                 }
             }
