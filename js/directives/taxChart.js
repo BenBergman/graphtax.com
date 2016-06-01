@@ -526,7 +526,7 @@ app.directive('taxChart', ['$window', function($window) {
 
                 if (!scope.doneFirstRender) {
                     transition_time_one = 0;
-                    if (scope.currentRegion != "State"){
+                    if (scope.currentRegion != "Province"){
                         scope.doneFirstRender = true;
                     }
                 }
