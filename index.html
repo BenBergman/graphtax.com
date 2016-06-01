@@ -108,17 +108,23 @@
 					<uib-accordion>
 						<uib-accordion-group heading="What happens if I earn more money?" is-open="accordions.earn" template-url="templates/group-template.html">
 							<p>
-							Cangratulations! Earning more money means more money in your pocket. When you earn more money, your position in the above graph will move over to the right. Sometimes this will mean you enter a new tax bracket (ie. cross a jump on the green line). Don't worry though; this new tax bracket only applies to the money you earn while you stay in this bracket! While it is generally true that you get to keep less of the money you earn while in the higher tax brackets, the amount you get too keep from the money earned in the lower brackets will not be affected.
+							Cangratulations! Earning more money means more money in your pocket. When you earn more money, your position in the above graph will move over to the right. Sometimes this will mean you enter a new tax bracket (ie. cross a jump on the green line). Don't worry though; this new tax bracket only applies to the money you earn while you stay in this bracket! While it is generally true that you get to keep less of the money you earn while in the higher tax brackets, the amount you get to keep from the money earned in the lower brackets will not be affected.
 							</p>
 							<p>
-							As you can see from the above graph, the amount of tax you pay for each income level is a fairly smooth line (see the blue line). The orange line then shows the average tax rate for each dollar you earned. Much of the time this effective tax rate is more useful than your tax bracket.
+							As you can see from the above graph, the amount of tax you pay for each income level is a fairly smooth line (see the blue line). The orange line then shows the average tax rate for each dollar you earned. Much of the time this effective tax rate is more useful than your tax bracket for assessing how you are being taxed.
 							</p>
 							<p>
 							Mouse over the graph and see for yourself the taxes for each income level!
 							</p>
 						</uib-accordion-group>
 						<uib-accordion-group heading="How do tax credits and deductions affect my taxes?" is-open="accordions.credits" template-url="templates/group-template.html">
-							<p uib-popover="Refundable tax credits are very similar to the government writing you a cheque at the end of the year, regardless of what you earned or how much you owe on your taxes. If your owe $0 or $50,000 in taxes, you will receive the same benefit." popover-trigger="mouseenter">
+							<p>
+							Credits and deduction are similar in that they both reduce the taxes you owe, but credits are applied directly to your taxes owed and deduction are applied to the income you earned. As a result, credits affect all earner by the same amount of dollars (ie. a $100 credit saves $100 for someone earning $20,000 and for someone earning $200,000) while deductions come "off the top" and effectively lowering your income bracket (ie. a $100 deduction for someone currently in a lower bracket of 10% would save $10, but someone in a 30% tax bracket would save $30).
+							</p>
+							<p>
+							Try adjusting these sliders to see the approximate effects different types of credits and deductions have on your taxes!
+							</p>
+							<p uib-popover="Refundable tax credits are very similar to the government writing you a cheque at the end of the year, regardless of what you earned or how much you owe on your taxes. If you owe $0 or $50,000 in taxes, you will receive the same benefit." popover-trigger="mouseenter">
 							Credits (Refundable)<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>:
 							</p>
 							<slider ng-model="sliders.creditRefundable" formatter="sliderFormat(value)" min="min" max="max"></slider>
@@ -126,7 +132,7 @@
 							Credits (Non-refundable)<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>:
 							</p>
 							<slider ng-model="sliders.creditNonRefundable" formatter="sliderFormat(value)" min="min" max="max"></slider>
-							<p uib-popover="Tax deductions effectively reduce the amount of your income for the year that gets taxed." popover-trigger="mouseenter">
+							<p uib-popover="Tax deductions effectively reduce the amount of your income for the year that gets taxed. Note that the reduction in taxes owed is less than the amount of the deduction. If you have chosen to take on an additional expense to get this deduction (eg. an investment loan), for every dollar you spend you are saving only a fraction of that on your taxes. Without accounting for any other benfits of the expense, this is a net loss." popover-trigger="mouseenter">
 							Deductions<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>:
 							</p>
 							<slider ng-model="sliders.deduction" formatter="sliderFormat(value)" min="min" max="max"></slider>
