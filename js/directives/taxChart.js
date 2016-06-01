@@ -136,6 +136,7 @@ app.directive('taxChart', ['$window', function($window) {
             var incomeAxis = d3.svg.axis()
                     .scale(incomeScale)
                     .tickFormat(d3.format("$s"))
+                    .innerTickSize(margins.top + margins.bottom - height)
                     .orient("bottom"),
                 owedAxis = d3.svg.axis()
                     .scale(owedScale)
@@ -144,6 +145,7 @@ app.directive('taxChart', ['$window', function($window) {
                 rateAxis = d3.svg.axis()
                     .scale(rateScale)
                     .tickFormat(d3.format("%"))
+                    .innerTickSize(margins.right + margins.left - width)
                     .orient("left");
 
             var taxStack = d3.layout.stack()
@@ -225,28 +227,6 @@ app.directive('taxChart', ['$window', function($window) {
                     .attr("class", "y axis")
                     .attr("transform", "translate(" + (margins.left) + ",0)")
                     .call(rateAxis);
-
-                d3.selectAll("g.x g.tick")
-                    .append("line")
-                    .classed("grid-line", true)
-                    .attr("fill", "none")
-                    .attr("stroke", "lightgrey")
-                    .attr("stroke-width", "1px")
-                    .attr("x1", 0)
-                    .attr("y1", 0)
-                    .attr("x2", 0)
-                    .attr("y2", margins.top + margins.bottom - height);
-
-                d3.selectAll("#rateaxis g.tick")
-                    .append("line")
-                    .classed("grid-line", true)
-                    .attr("fill", "none")
-                    .attr("stroke", "lightgrey")
-                    .attr("stroke-width", "1px")
-                    .attr("x1", 0)
-                    .attr("y1", 0)
-                    .attr("x2", width - margins.left - margins.right)
-                    .attr("y2", 0);
 
                 svg.append("text")
                     .attr("id", "incomelabel")
@@ -504,6 +484,9 @@ app.directive('taxChart', ['$window', function($window) {
                 rateScale
                     .range([height - margins.bottom, margins.top]);
 
+                incomeAxis.innerTickSize(margins.top + margins.bottom - height);
+                rateAxis.innerTickSize(margins.right + margins.left - width);
+
                 d3.select('#incomeaxis')
                     .attr("transform", "translate(0," + (height - margins.bottom) + ")")
                     .call(incomeAxis);
@@ -513,11 +496,6 @@ app.directive('taxChart', ['$window', function($window) {
                 d3.select('#rateaxis')
                     .attr("transform", "translate(" + (margins.left) + ",0)")
                     .call(rateAxis);
-
-                d3.selectAll('g.x g.tick line.grid-line')
-                    .attr("y2", margins.top + margins.bottom - height);
-                d3.selectAll("#rateaxis g.tick line.grid-line")
-                    .attr("x2", width - margins.left - margins.right);
 
                 d3.select('#incomelabel')
                     .attr("transform", "translate(" + (width/2) + "," + (height - (margins.bottom/3)) + ")");

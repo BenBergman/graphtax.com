@@ -40,6 +40,11 @@ body {
 	font-size: 13px;
 }
 
+.tick line {
+    stroke: black;
+    opacity: 0.2;
+}
+
 .main {
 	font: 1em sans-serif;
 	color: #404040;
