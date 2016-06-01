@@ -288,7 +288,7 @@ app.directive('taxChart', ['$window', function($window) {
                         .get("Federal")
                         .values[dataIndex]
                         .tax;
-                    scope.currentProvincialTax = d3.map(scope.taxes, function(d) { return d.name; })
+                    scope.currentRegionalTax = d3.map(scope.taxes, function(d) { return d.name; })
                         .get("Provincial")
                         .values[dataIndex]
                         .tax;
@@ -297,7 +297,7 @@ app.directive('taxChart', ['$window', function($window) {
                         .get("Federal")
                         .values[dataIndex]
                         .effective;
-                    scope.currentProvincialEff = d3.map(scope.effective, function(d) { return d.name; })
+                    scope.currentRegionalEff = d3.map(scope.effective, function(d) { return d.name; })
                         .get("Provincial")
                         .values[dataIndex]
                         .effective;
@@ -306,7 +306,7 @@ app.directive('taxChart', ['$window', function($window) {
                         .get("Federal")
                         .values[dataIndex]
                         .marginal;
-                    scope.currentProvincialMarg = d3.map(scope.marginal, function(d) { return d.name; })
+                    scope.currentRegionalMarg = d3.map(scope.marginal, function(d) { return d.name; })
                         .get("Provincial")
                         .values[dataIndex]
                         .marginal;

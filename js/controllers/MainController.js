@@ -32,13 +32,13 @@ app.controller("MainController", ["$scope", "$uibModal", "$filter", "$http", fun
     $scope.currentMarg = 0;
 
     $scope.currentFederalTax = 0;
-    $scope.currentProvincialTax = 0;
+    $scope.currentRegionalTax = 0;
 
     $scope.currentFederalMarg = 0;
-    $scope.currentProvincialMarg = 0;
+    $scope.currentRegionalMarg = 0;
 
     $scope.currentFederalEff = 0;
-    $scope.currentProvincialEff = 0;
+    $scope.currentRegionalEff = 0;
 
     $scope.doneFirstRender = false;
     $scope.currentRegion = "State";
