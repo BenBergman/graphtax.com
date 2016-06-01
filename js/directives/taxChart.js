@@ -47,8 +47,9 @@ app.directive('taxChart', ['$window', function($window) {
 
 
                 for (var i = 0; i <= 250000; i += 100) {
-                    var tax_owed = taxes_owed(i - (scope.accordions.credits ? scope.sliders.deduction : 0), fed_bracket) - (scope.accordions.credits ? scope.sliders.creditRefundable : 0);
-                    tax_owed += taxes_owed(i - (scope.accordions.credits ? scope.sliders.deduction : 0), prov_bracket) - (scope.accordions.credits ? scope.sliders.creditRefundable : 0);
+                    var tax_owed = taxes_owed(i - (scope.accordions.credits ? scope.sliders.deduction : 0), fed_bracket);
+                    tax_owed += taxes_owed(i - (scope.accordions.credits ? scope.sliders.deduction : 0), prov_bracket);
+                    tax_owed -= (scope.accordions.credits ? scope.sliders.creditRefundable : 0);
                     if (tax_owed > 0) {
                         tax_owed -= scope.accordions.credits ? scope.sliders.creditNonRefundable : 0;
                         if (tax_owed < 0) {
