@@ -546,6 +546,13 @@ app.directive('taxChart', ['$window', function($window) {
                 var transition_time_one = 2000;
                 var transition_time_two = 2000;
 
+                if (!scope.doneFirstRender) {
+                    transition_time_one = 0;
+                    if (scope.currentRegion != "State"){
+                        scope.doneFirstRender = true;
+                    }
+                }
+
                 var tempTax = lineGenTax(scope.data);
                 var tempEff = lineGenEff(scope.data);
                 var tempMarg = lineGenMarg(scope.data);
@@ -567,6 +574,11 @@ app.directive('taxChart', ['$window', function($window) {
                     .transition()
                     .duration(transition_time_one)
                     .attr("d", function(d) { return marginalArea(d.values); });
+
+                if (!scope.accordions.breakdown) {
+                    svg.selectAll(".layer")
+                        .style("fill-opacity", "0.0");
+                }
 
 
                 incomeScale
