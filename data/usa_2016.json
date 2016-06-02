@@ -66,16 +66,9 @@
             ],
             "personalAmount": [
                 [999999999999999, 0.0]
-            ]
-        },
-        "filler": {
-            "abatement": 0.0,
-            "income": [
-                [999999999999999, 0.0]
             ],
-            "personalAmount": [
-                [999999999999999, 0.0]
-            ]
+            "standardDeduction": 6300,
+            "personalExemption": 4000
         },
         "Alabama": {
             "abatement": 0.0,

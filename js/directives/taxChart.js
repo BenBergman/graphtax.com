@@ -47,9 +47,11 @@ app.directive('taxChart', ['$window', function($window) {
 
 
                 for (var i = 0; i <= 250000; i += 100) {
-                    var tax_owed = taxes_owed(i - (scope.accordions.credits ? scope.sliders.deduction : 0), federal_bracket);
-                    tax_owed += taxes_owed(i - (scope.accordions.credits ? scope.sliders.deduction : 0), regional_bracket);
-                    tax_owed -= (scope.accordions.credits ? scope.sliders.creditRefundable : 0);
+                    var federal_tax = taxes_owed(i - (scope.accordions.credits ? scope.sliders.deduction : 0) - scope.rawBrackets.Federal.standardDeduction - scope.rawBrackets.Federal.personalExemption, federal_bracket);
+                    var regional_tax = taxes_owed(i - (scope.accordions.credits ? scope.sliders.deduction : 0), regional_bracket);
+                    var refundable_credits = (scope.accordions.credits ? scope.sliders.creditRefundable : 0);
+
+                    var tax_owed = federal_tax + regional_tax - refundable_credits;
                     if (tax_owed > 0) {
                         tax_owed -= scope.accordions.credits ? scope.sliders.creditNonRefundable : 0;
                         if (tax_owed < 0) {
@@ -60,7 +62,9 @@ app.directive('taxChart', ['$window', function($window) {
                     if (i > 0) {
                         eff_rate = tax_owed / i;
                     }
-                    var marg_rate = marginal_rate(i - (scope.accordions.credits ? scope.sliders.deduction : 0), brackets);
+                    var fed_marg_rate = marginal_rate(i - (scope.accordions.credits ? scope.sliders.deduction : 0) - scope.rawBrackets.Federal.standardDeduction - scope.rawBrackets.Federal.personalExemption, federal_bracket);
+                    var reg_marg_rate = marginal_rate(i - (scope.accordions.credits ? scope.sliders.deduction : 0), regional_bracket);
+                    var marg_rate = fed_marg_rate + reg_marg_rate;
                     if (tax_owed == 0) {
                         marg_rate = 0;
                     }
@@ -73,25 +77,25 @@ app.directive('taxChart', ['$window', function($window) {
 
                     d3.map(scope.taxes, function(d) { return d.name; }).get("Federal").values.push({
                         "income": i,
-                        "tax": taxes_owed(i, federal_bracket),
+                        "tax": federal_tax,
                     });
                     d3.map(scope.taxes, function(d) { return d.name; }).get("Provincial").values.push({
                         "income": i,
-                        "tax": taxes_owed(i, regional_bracket),
+                        "tax": regional_tax,
                     });
 
                     d3.map(scope.effective, function(d) { return d.name; }).get("Federal").values.push({
                         "income": i,
-                        "effective": effective_rate(i, federal_bracket),
+                        "effective": effective_rate(i, federal_bracket, federal_tax),
                     });
                     d3.map(scope.effective, function(d) { return d.name; }).get("Provincial").values.push({
                         "income": i,
-                        "effective": effective_rate(i, regional_bracket),
+                        "effective": effective_rate(i, regional_bracket, regional_tax),
                     });
 
                     d3.map(scope.marginal, function(d) { return d.name; }).get("Federal").values.push({
                         "income": i,
-                        "marginal": marginal_rate(i, federal_bracket),
+                        "marginal": marginal_rate(i - scope.rawBrackets.Federal.standardDeduction - scope.rawBrackets.Federal.personalExemption, federal_bracket),
                     });
                     d3.map(scope.marginal, function(d) { return d.name; }).get("Provincial").values.push({
                         "income": i,

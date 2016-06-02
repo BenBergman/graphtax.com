@@ -49,7 +49,9 @@ app.controller("MainController", ["$scope", "$uibModal", "$filter", "$http", fun
             ],
             "personalAmount": [
                 [Infinity, 0.0]
-            ]
+            ],
+            "standardDeduction": 0,
+            "personalExemption": 0
         },
         "State": {
             "abatement": 0.0,
