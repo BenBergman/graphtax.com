@@ -137,6 +137,8 @@ app.directive('taxChart', ['$window', function($window) {
                     .scale(incomeScale)
                     .tickFormat(d3.format("$s"))
                     .innerTickSize(margins.top + margins.bottom - height)
+                    .tickPadding(10)
+                    .ticks(width < 750 ? 8 : 12)
                     .orient("bottom"),
                 owedAxis = d3.svg.axis()
                     .scale(owedScale)
@@ -146,6 +148,7 @@ app.directive('taxChart', ['$window', function($window) {
                     .scale(rateScale)
                     .tickFormat(d3.format("%"))
                     .innerTickSize(margins.right + margins.left - width)
+                    .tickPadding(10)
                     .orient("left");
 
             var taxStack = d3.layout.stack()
@@ -484,7 +487,8 @@ app.directive('taxChart', ['$window', function($window) {
                 rateScale
                     .range([height - margins.bottom, margins.top]);
 
-                incomeAxis.innerTickSize(margins.top + margins.bottom - height);
+                incomeAxis.innerTickSize(margins.top + margins.bottom - height)
+                    .ticks(width < 750 ? 8 : 12);
                 rateAxis.innerTickSize(margins.right + margins.left - width);
 
                 d3.select('#incomeaxis')
@@ -526,7 +530,7 @@ app.directive('taxChart', ['$window', function($window) {
 
                 if (!scope.doneFirstRender) {
                     transition_time_one = 0;
-                    if (scope.currentRegion != "State"){
+                    if (scope.currentRegion != "Province"){
                         scope.doneFirstRender = true;
                     }
                 }

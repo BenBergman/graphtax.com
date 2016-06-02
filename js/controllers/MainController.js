@@ -1,5 +1,5 @@
 app.controller("MainController", ["$scope", "$uibModal", "$filter", "$http", function($scope, $uibModal, $filter, $http) {
-    $http.get('data/usa_2016.json')
+    $http.get('data/canada_2016.json')
         .then(function(res) {
             for (var key in res.data) {
                 $scope[key] = res.data[key];
@@ -41,7 +41,7 @@ app.controller("MainController", ["$scope", "$uibModal", "$filter", "$http", fun
     $scope.currentRegionalEff = 0;
 
     $scope.doneFirstRender = false;
-    $scope.currentRegion = "State";
+    $scope.currentRegion = "Province";
     $scope.rawBrackets = {
         "Federal": {
             "income": [
@@ -51,7 +51,7 @@ app.controller("MainController", ["$scope", "$uibModal", "$filter", "$http", fun
                 [Infinity, 0.0]
             ]
         },
-        "State": {
+        "Province": {
             "abatement": 0.0,
             "income": [
                 [Infinity, 0.0]
