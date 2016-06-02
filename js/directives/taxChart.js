@@ -138,6 +138,7 @@ app.directive('taxChart', ['$window', function($window) {
                     .tickFormat(d3.format("$s"))
                     .innerTickSize(margins.top + margins.bottom - height)
                     .tickPadding(10)
+                    .ticks(width < 750 ? 8 : 12)
                     .orient("bottom"),
                 owedAxis = d3.svg.axis()
                     .scale(owedScale)
@@ -486,7 +487,8 @@ app.directive('taxChart', ['$window', function($window) {
                 rateScale
                     .range([height - margins.bottom, margins.top]);
 
-                incomeAxis.innerTickSize(margins.top + margins.bottom - height);
+                incomeAxis.innerTickSize(margins.top + margins.bottom - height)
+                    .ticks(width < 750 ? 8 : 12);
                 rateAxis.innerTickSize(margins.right + margins.left - width);
 
                 d3.select('#incomeaxis')
