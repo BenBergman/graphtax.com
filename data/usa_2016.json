@@ -163,7 +163,7 @@
                 [999999999999999, 0.0895]
             ],
             "standardDeduction": 5200,
-            "personalExemption": 1775 // TODO: Exemptions are phased out by 2% for every $2,500 in income above $150,000
+            "personalExemption": 1775
         },
         "Florida": {
             "income": [
@@ -236,7 +236,7 @@
                 [45450, 0.0680],
                 [68175, 0.0792],
                 [999999999999999, 0.0898]
-            ]
+            ],
             "standardCredit": 1970,
             "personalExemption": 40
         },
@@ -381,7 +381,7 @@
         },
         "New Hampshire": {
             "income": [
-                [999999999999999, 0.05] // TODO: interest and dividend income only?
+                [999999999999999, 0.05]
             ],
             "personalExemption": 2400
         },
@@ -523,7 +523,7 @@
         },
         "Tennessee": {
             "income": [
-                [999999999999999, 0.0600] // TODO: interest and dividend income only?
+                [999999999999999, 0.0600]
             ],
             "personalExemption": 1250
         },
@@ -536,7 +536,7 @@
             "income": [
                 [999999999999999, 0.0500]
             ],
-            "standardCredit": // TODO Federal amount * 0.06, non-refundable
+            "standardCredit": 99999999999999,
             "personalExemption": 3000
         },
         "Vermont": {
@@ -582,7 +582,7 @@
                 [240190, 0.0627],
                 [999999999999999, 0.0765]
             ],
-            "standardDeduction": 10270, // TODO phases out by 12% at $14,800, phases out to zero at $100,383
+            "standardDeduction": 10270,
             "personalExemption": 700
         },
         "Wyoming": {
