@@ -70,3 +70,9 @@ body {
 	padding:3px 10px;
 	font-size: .8em
 }
+
+.scrollable-menu {
+    height: auto;
+    max-height: 400px;
+    overflow-x: hidden;
+}
