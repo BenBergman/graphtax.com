@@ -3,9 +3,8 @@ app.directive('taxChart', ['$window', function($window) {
         restrict: 'EA',
         link: function(scope, element, attrs) {
             scope.calculateData = function() {
-                var federal_bracket = subtract_brackets(scope.rawBrackets.Federal.income, scope.rawBrackets.Federal.personalAmount);
-                federal_bracket = bracket_mult(federal_bracket, 1 - scope.rawBrackets[scope.currentRegion].abatement)
-                var regional_bracket = subtract_brackets(scope.rawBrackets[scope.currentRegion].income, scope.rawBrackets[scope.currentRegion].personalAmount);
+                var federal_bracket = scope.rawBrackets.Federal.income;
+                var regional_bracket = scope.rawBrackets[scope.currentRegion].income;
 
                 var brackets = add_brackets(federal_bracket, regional_bracket);
 
