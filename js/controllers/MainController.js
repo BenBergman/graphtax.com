@@ -10,8 +10,8 @@ app.controller("MainController", ["$scope", "$uibModal", "$filter", "$http", fun
                                     $scope.usersRegion = res.results[key].address_components[component].long_name;
                                     if ($scope.regions.indexOf($scope.usersRegion) >= 0) {
                                         $scope.currentRegion = $scope.usersRegion;
+                                        return;
                                     }
-                                    return;
                                 }
                             }
                         }
