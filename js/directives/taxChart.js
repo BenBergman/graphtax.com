@@ -105,19 +105,13 @@ app.directive('taxChart', ['$window', function($window) {
 
 
             var width = element[0].clientWidth;
-            var height = width/2;
-            var margins = {
-                top: 20,
-                right: 120,
-                bottom: 70,
-                left: 100
-            };
+            update_sizes();
 
             var areaOpacity = "0.3";
 
             var svg = d3.select(element[0])
                 .append("svg")
-                .attr("id", "directive")
+                .attr("id", "tax-chart")
                 .style({
                     "width": width,
                     "height": height
@@ -141,18 +135,18 @@ app.directive('taxChart', ['$window', function($window) {
                     .tickFormat(d3.format("$s"))
                     .innerTickSize(margins.top + margins.bottom - height)
                     .tickPadding(10)
-                    .ticks(width < 750 ? 8 : 12)
+                    .ticks(ticks)
                     .orient("bottom"),
                 owedAxis = d3.svg.axis()
                     .scale(owedScale)
                     .tickFormat(d3.format("$s"))
-                    .orient("right"),
+                    .orient(owedAxisOrientation),
                 rateAxis = d3.svg.axis()
                     .scale(rateScale)
                     .tickFormat(d3.format("%"))
-                    .innerTickSize(margins.right + margins.left - width)
-                    .tickPadding(10)
-                    .orient("left");
+                    .innerTickSize(rateAxisInnerTickSize)
+                    .tickPadding(rateAxisTickPadding)
+                    .orient(rateAxisOrientation);
 
             var taxStack = d3.layout.stack()
                 .offset("zero")
@@ -242,16 +236,19 @@ app.directive('taxChart', ['$window', function($window) {
                     .text("Total Income");
                 svg.append("text")
                     .attr("id", "owedlabel")
-                    .attr("class", "label")
+                    .attr("class", "label ylabel")
                     .attr("text-anchor", "middle")
                     .attr("transform", "translate(" + (width - (margins.left/2)) + "," + (height/2) + ")rotate(-90)")
                     .text("Total Taxes Due");
                 svg.append("text")
                     .attr("id", "ratelabel")
-                    .attr("class", "label")
+                    .attr("class", "label ylabel")
                     .attr("text-anchor", "middle")
                     .attr("transform", "translate(" + (margins.left/2) + "," + (height/2) + ")rotate(-90)")
                     .text("Rate");
+
+                d3.selectAll('.ylabel')
+                    .style("fill-opacity", labelOpacity);
             }
 
 
@@ -474,9 +471,31 @@ app.directive('taxChart', ['$window', function($window) {
             }
 
 
+            function update_sizes() {
+                var breakPoint = 750;
+
+                height = width * (width < breakPoint ? 0.6 : 0.5);
+
+                margins = {
+                    top: width < breakPoint ? 5 : 20,
+                    left: width < breakPoint ? 0 : 100,
+                    right: width < breakPoint ? 0 : 120,
+                    bottom: 70,
+                };
+
+                labelOpacity = width < breakPoint ? 0.0 : 1.0;
+                ticks = width < breakPoint ? 8 : 12;
+
+                owedAxisOrientation = width < breakPoint ? "left" : "right";
+                rateAxisOrientation = width < breakPoint ? "right" : "left";
+                rateAxisTickPadding = width < breakPoint ? 10 - width : 10;
+                rateAxisInnerTickSize = (margins.right + margins.left - width) * (width < breakPoint ? -1 : 1);
+            }
+
+
             function resize() {
                 width = element[0].clientWidth;
-                height = width/2;
+                update_sizes();
 
                 svg.style({
                     "width": width,
@@ -490,9 +509,18 @@ app.directive('taxChart', ['$window', function($window) {
                 rateScale
                     .range([height - margins.bottom, margins.top]);
 
-                incomeAxis.innerTickSize(margins.top + margins.bottom - height)
-                    .ticks(width < 750 ? 8 : 12);
-                rateAxis.innerTickSize(margins.right + margins.left - width);
+                d3.selectAll('.ylabel')
+                    .style("fill-opacity", labelOpacity);
+
+                incomeAxis
+                    .innerTickSize(margins.top + margins.bottom - height)
+                    .ticks(ticks);
+                owedAxis
+                    .orient(owedAxisOrientation);
+                rateAxis
+                    .orient(rateAxisOrientation)
+                    .tickPadding(rateAxisTickPadding)
+                    .innerTickSize(rateAxisInnerTickSize);
 
                 d3.select('#incomeaxis')
                     .attr("transform", "translate(0," + (height - margins.bottom) + ")")
