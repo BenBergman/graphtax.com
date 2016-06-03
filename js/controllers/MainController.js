@@ -1,8 +1,51 @@
 app.controller("MainController", ["$scope", "$uibModal", "$filter", "$http", function($scope, $uibModal, $filter, $http) {
+    $http.jsonp("https://geoip.nekudo.com/api?callback=JSON_CALLBACK")
+        .success(function(data, status, headers, config) {
+            $http.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + data.location.latitude + "," + data.location.longitude + "&sensor=false")
+                .success(function (res) {
+                    for (var key in res.results) {
+                        for (var component in res.results[key].address_components) {
+                            for (var type in res.results[key].address_components[component].types) {
+                                if (res.results[key].address_components[component].types[type] == "administrative_area_level_1") {
+                                    $scope.usersRegion = res.results[key].address_components[component].long_name;
+                                    if ($scope.regions.indexOf($scope.usersRegion) >= 0) {
+                                        $scope.currentRegion = $scope.usersRegion;
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    $scope.usersRegion = "no_region_match";
+                    if ($scope.defaultRegion != null) {
+                        $scope.currentRegion = $scope.defaultRegion;
+                    }
+                })
+                .error(function() {
+                    $scope.usersRegion = "geocode_error";
+                    if ($scope.defaultRegion != null) {
+                        $scope.currentRegion = $scope.defaultRegion;
+                    }
+                });
+        })
+        .error(function() {
+            $scope.usersRegion = "geoip_error";
+            if ($scope.defaultRegion != null) {
+                $scope.currentRegion = $scope.defaultRegion;
+            }
+        });
+
     $http.get('data/usa_2016.json')
         .then(function(res) {
             for (var key in res.data) {
                 $scope[key] = res.data[key];
+            }
+            if (["geoip_error", "geocode_error", "no_region_match"].indexOf($scope.usersRegion) >= 0) {
+                $scope.currentRegion = $scope.defaultRegion;
+            } else if ($scope.usersRegion == null) {
+                // Give geoip a chance to match the user's region
+            } else {
+                $scope.currentRegion = $scope.usersRegion;
             }
         });
 

@@ -1,5 +1,5 @@
 {
-    "currentRegion": "California",
+    "defaultRegion": "California",
     "regions": [
         "Alabama",
         "Alaska",

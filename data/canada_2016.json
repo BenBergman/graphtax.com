@@ -1,5 +1,5 @@
 {
-    "currentRegion": "Ontario",
+    "defaultRegion": "Ontario",
     "regions": [
         "Alberta",
         "British Columbia",
