@@ -471,10 +471,10 @@ app.directive('taxChart', ['$window', function($window) {
             function update_sizes() {
                 var breakPoint = 750;
 
-                height = width * (width < breakPoint ? 0.6 : 0.5);
+                height = width * (width < breakPoint ? 0.7 : 0.5);
 
                 margins = {
-                    top: width < breakPoint ? 5 : 20,
+                    top: width < breakPoint ? 20 : 25,
                     left: width < breakPoint ? 0 : 100,
                     right: width < breakPoint ? 0 : 120,
                     bottom: 70,

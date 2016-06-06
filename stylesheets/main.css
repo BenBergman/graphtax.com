@@ -50,6 +50,10 @@ body {
 	color: #404040;
 }
 
+.main .title {
+    text-align: center;
+}
+
 .main .label {
 	font: 1.5em sans-serif;
 }
