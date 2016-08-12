@@ -22,6 +22,9 @@ app.controller("MainController", ["$scope", "$uibModal", "$filter", "$http", fun
             $scope.usersRegion = data.region_name;
             if ($scope.regions.indexOf($scope.usersRegion) >= 0) {
                 $scope.currentRegion = $scope.usersRegion;
+            } else {
+                $scope.usersRegion = "no_region_match";
+                $scope.currentRegion = $scope.defaultRegion;
             }
         })
         .error(function() {
@@ -36,6 +39,9 @@ app.controller("MainController", ["$scope", "$uibModal", "$filter", "$http", fun
             $scope.usersRegion = data.region;
             if ($scope.regions.indexOf($scope.usersRegion) >= 0) {
                 $scope.currentRegion = $scope.usersRegion;
+            } else {
+                $scope.usersRegion = "no_region_match";
+                $scope.currentRegion = $scope.defaultRegion;
             }
         })
         .error(function() {
