@@ -4,6 +4,9 @@ app.controller("MainController", ["$scope", "$uibModal", "$filter", "$http", fun
             $scope.usersRegion = data.geoplugin_regionName;
             if ($scope.regions.indexOf($scope.usersRegion) >= 0) {
                 $scope.currentRegion = $scope.usersRegion;
+            } else {
+                $scope.usersRegion = "no_region_match";
+                $scope.currentRegion = $scope.defaultRegion;
             }
         })
         .error(function() {
