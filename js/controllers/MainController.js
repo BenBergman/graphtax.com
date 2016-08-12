@@ -1,32 +1,10 @@
 app.controller("MainController", ["$scope", "$uibModal", "$filter", "$http", function($scope, $uibModal, $filter, $http) {
-    $http.jsonp("https://geoip.nekudo.com/api?callback=JSON_CALLBACK")
+    $http.jsonp("http://www.geoplugin.net/json.gp?jsoncallback=JSON_CALLBACK")
         .success(function(data, status, headers, config) {
-            $http.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + data.location.latitude + "," + data.location.longitude + "&sensor=false")
-                .success(function (res) {
-                    for (var key in res.results) {
-                        for (var component in res.results[key].address_components) {
-                            for (var type in res.results[key].address_components[component].types) {
-                                if (res.results[key].address_components[component].types[type] == "administrative_area_level_1") {
-                                    $scope.usersRegion = res.results[key].address_components[component].long_name;
-                                    if ($scope.regions.indexOf($scope.usersRegion) >= 0) {
-                                        $scope.currentRegion = $scope.usersRegion;
-                                        return;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    $scope.usersRegion = "no_region_match";
-                    if ($scope.defaultRegion != null) {
-                        $scope.currentRegion = $scope.defaultRegion;
-                    }
-                })
-                .error(function() {
-                    $scope.usersRegion = "geocode_error";
-                    if ($scope.defaultRegion != null) {
-                        $scope.currentRegion = $scope.defaultRegion;
-                    }
-                });
+            $scope.usersRegion = data.geoplugin_regionName;
+            if ($scope.regions.indexOf($scope.usersRegion) >= 0) {
+                $scope.currentRegion = $scope.usersRegion;
+            }
         })
         .error(function() {
             $scope.usersRegion = "geoip_error";
@@ -34,6 +12,36 @@ app.controller("MainController", ["$scope", "$uibModal", "$filter", "$http", fun
                 $scope.currentRegion = $scope.defaultRegion;
             }
         });
+
+    /* Alternate GeoIP providers with more up-to-date data, but as of this writing missing parts of Canada
+    $http.jsonp("https://freegeoip.net/json/?callback=JSON_CALLBACK")
+        .success(function(data, status, headers, config) {
+            $scope.usersRegion = data.region_name;
+            if ($scope.regions.indexOf($scope.usersRegion) >= 0) {
+                $scope.currentRegion = $scope.usersRegion;
+            }
+        })
+        .error(function() {
+            $scope.usersRegion = "geoip_error";
+            if ($scope.defaultRegion != null) {
+                $scope.currentRegion = $scope.defaultRegion;
+            }
+        });
+
+    $http.jsonp("http://ipinfo.io/?callback=JSON_CALLBACK")
+        .success(function(data, status, headers, config) {
+            $scope.usersRegion = data.region;
+            if ($scope.regions.indexOf($scope.usersRegion) >= 0) {
+                $scope.currentRegion = $scope.usersRegion;
+            }
+        })
+        .error(function() {
+            $scope.usersRegion = "geoip_error";
+            if ($scope.defaultRegion != null) {
+                $scope.currentRegion = $scope.defaultRegion;
+            }
+        });
+    */
 
     $http.get('data/usa_2016.json')
         .then(function(res) {
