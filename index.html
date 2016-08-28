@@ -105,7 +105,7 @@
 					<div tax-chart></div>
 				</div>
 				<div class="row readout">
-					<p class="col-md-3">Total Income: {{ currentIncome|currency:$:0 }}</p>
+					<p class="col-md-3">Pre-tax Income: {{ currentIncome|currency:$:0 }}</p>
 					<p class="col-md-3" uib-popover="The amount of tax you owe on the next dollar that you earn. For example, if you earned $50,000 and are in the 25% tax bracket and you earn an additional $100, you will pay 25% tax on that $100. This rate does not necessarily apply to the previous $50,000." popover-trigger="mouseenter"><font color="green">Marginal Tax Rate<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>: {{ currentMarg|percentage:1 }}</font></p>
 					<p class="col-md-3"><font color="blue">Total Taxes Due: {{ currentTax|currency:$:0 }}</font></p>
 					<p class="col-md-3" uib-popover="The average tax rate you pay for each dollar you earn." popover-trigger="mouseenter"><font color="orange">Effective Tax Rate<sup><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></sup>: {{ currentEff|percentage:1 }}</font></p>
